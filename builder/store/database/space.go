@@ -1,0 +1,262 @@
+package database
+
+import (
+	"context"
+	"fmt"
+	"log/slog"
+
+	"github.com/uptrace/bun"
+	"opencsg.com/csghub-server/common/errorx"
+	"opencsg.com/csghub-server/common/types"
+)
+
+type spaceStoreImpl struct {
+	db *DB
+}
+
+type SpaceStore interface {
+	// BeginTx(ctx context.Context) (bun.Tx, error)
+	// CreateTx(ctx context.Context, tx bun.Tx, input Space) (*Space, error)
+	Create(ctx context.Context, input Space) (*Space, error)
+	Update(ctx context.Context, input Space) (err error)
+	FindByPath(ctx context.Context, namespace, name string) (*Space, error)
+	Delete(ctx context.Context, input Space) error
+	ByID(ctx context.Context, id int64) (*Space, error)
+	// ByRepoIDs get spaces by repoIDs, only basice info, no related repo
+	ByRepoIDs(ctx context.Context, repoIDs []int64) (spaces []Space, err error)
+	ByRepoID(ctx context.Context, repoID int64) (*Space, error)
+	ByUsername(ctx context.Context, req *types.UserSpacesReq, onlyPublic bool) (spaces []Space, total int, err error)
+	ByUserLikes(ctx context.Context, userID int64, per, page int) (spaces []Space, total int, err error)
+	ByOrgPath(ctx context.Context, namespace string, per, page int, onlyPublic bool) (spaces []Space, total int, err error)
+	ListByPath(ctx context.Context, paths []string) ([]Space, error)
+	CreateAndUpdateRepoPath(ctx context.Context, input Space, path string) (*Space, error)
+}
+
+func NewSpaceStore() SpaceStore {
+	return &spaceStoreImpl{
+		db: defaultDB,
+	}
+}
+
+func NewSpaceStoreWithDB(db *DB) SpaceStore {
+	return &spaceStoreImpl{
+		db: db,
+	}
+}
+
+// func (s *spaceStoreImpl) BeginTx(ctx context.Context) (bun.Tx, error) {
+// 	return s.db.Core.BeginTx(ctx, nil)
+// }
+
+// func (s *spaceStoreImpl) CreateTx(ctx context.Context, tx bun.Tx, input Space) (*Space, error) {
+// 	res, err := tx.NewInsert().Model(&input).Exec(ctx)
+// 	if err := assertAffectedOneRow(res, err); err != nil {
+// 		slog.Error("create space in tx failed", slog.String("error", err.Error()))
+// 		return nil, fmt.Errorf("create space in tx failed,error:%w", err)
+// 	}
+
+// 	input.ID, _ = res.LastInsertId()
+// 	return &input, nil
+// }
+
+func (s *spaceStoreImpl) Create(ctx context.Context, input Space) (*Space, error) {
+	res, err := s.db.Core.NewInsert().Model(&input).Exec(ctx)
+	if err := assertAffectedOneRow(res, err); err != nil {
+		err = errorx.HandleDBError(err, nil)
+		return nil, fmt.Errorf("create space in db failed,error:%w", err)
+	}
+
+	input.ID, _ = res.LastInsertId()
+	return &input, nil
+}
+
+func (s *spaceStoreImpl) Update(ctx context.Context, input Space) (err error) {
+	_, err = s.db.Core.NewUpdate().Model(&input).WherePK().Exec(ctx)
+	err = errorx.HandleDBError(err, nil)
+	return
+}
+
+func (s *spaceStoreImpl) FindByPath(ctx context.Context, namespace, name string) (*Space, error) {
+	resSpace := new(Space)
+	err := s.db.Operator.Core.
+		NewSelect().
+		Model(resSpace).
+		Relation("Repository.User").
+		Where("repository.path = ? and repository.repository_type = ?", fmt.Sprintf("%s/%s", namespace, name), types.SpaceRepo).
+		Scan(ctx)
+	err = errorx.HandleDBError(err, nil)
+	if err != nil {
+		return nil, fmt.Errorf("select space by path, error: %w", err)
+	}
+
+	err = s.db.Operator.Core.NewSelect().
+		Model(resSpace.Repository).
+		WherePK().
+		Relation("Tags", func(sq *bun.SelectQuery) *bun.SelectQuery {
+			return sq.Where("repository_tag.count > 0")
+		}).
+		Scan(ctx)
+	err = errorx.HandleDBError(err, errorx.Ctx().
+		Set("path", fmt.Sprintf("%s/%s", namespace, name)),
+	)
+
+	return resSpace, err
+}
+
+func (s *spaceStoreImpl) Delete(ctx context.Context, input Space) error {
+	res, err := s.db.Operator.Core.NewDelete().Model(&input).WherePK().Exec(ctx)
+	if err := assertAffectedOneRow(res, err); err != nil {
+		err = errorx.HandleDBError(err, nil)
+		return fmt.Errorf("delete space in tx failed,error:%w", err)
+	}
+	return nil
+}
+
+func (s *spaceStoreImpl) ByID(ctx context.Context, id int64) (*Space, error) {
+	var space Space
+	err := s.db.Core.NewSelect().Model(&space).Relation("Repository").Where("space.id = ?", id).Scan(ctx)
+	if err != nil {
+		err = errorx.HandleDBError(err, nil)
+		return nil, err
+	}
+	return &space, err
+}
+
+// ByRepoIDs get spaces by repoIDs, only basic info, no related repo
+func (s *spaceStoreImpl) ByRepoIDs(ctx context.Context, repoIDs []int64) (spaces []Space, err error) {
+	err = s.db.Operator.Core.NewSelect().
+		Model(&spaces).
+		Relation("Repository").
+		Where("repository_id in (?)", bun.In(repoIDs)).
+		Scan(ctx)
+
+	err = errorx.HandleDBError(err, nil)
+	return
+
+}
+
+func (s *spaceStoreImpl) ByRepoID(ctx context.Context, repoID int64) (*Space, error) {
+	var space Space
+	err := s.db.Core.NewSelect().Model(&space).Where("repository_id = ?", repoID).Scan(ctx)
+	err = errorx.HandleDBError(err, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find space by id, repository id: %d,error: %w", repoID, err)
+	}
+	return &space, err
+}
+
+func (s *spaceStoreImpl) ByUsername(ctx context.Context, req *types.UserSpacesReq, onlyPublic bool) (spaces []Space, total int, err error) {
+	query := s.db.Operator.Core.
+		NewSelect().
+		Model(&spaces).
+		Relation("Repository.Tags").
+		Where("repository.path like ?", fmt.Sprintf("%s/%%", req.Owner))
+	if len(req.SDK) > 0 {
+		query = query.Where("space.sdk = ?", req.SDK)
+	}
+	if onlyPublic {
+		query = query.Where("repository.private = ?", false)
+	}
+	query = query.Order("space.created_at DESC").
+		Limit(req.PageSize).
+		Offset((req.Page - 1) * req.PageSize)
+
+	err = query.Scan(ctx)
+	err = errorx.HandleDBError(err, nil)
+	if err != nil {
+		return
+	}
+	total, err = query.Count(ctx)
+	err = errorx.HandleDBError(err, nil)
+	return
+}
+
+func (s *spaceStoreImpl) ByUserLikes(ctx context.Context, userID int64, per, page int) (spaces []Space, total int, err error) {
+	query := s.db.Operator.Core.
+		NewSelect().
+		Model(&spaces).
+		Relation("Repository.Tags").
+		Where("repository.id in (select repo_id from user_likes where user_id=? and deleted_at is NULL)", userID)
+
+	query = query.Order("space.created_at DESC").
+		Limit(per).
+		Offset((page - 1) * per)
+
+	err = query.Scan(ctx)
+	err = errorx.HandleDBError(err, nil)
+	if err != nil {
+		return
+	}
+	total, err = query.Count(ctx)
+	err = errorx.HandleDBError(err, nil)
+	return
+}
+
+func (s *spaceStoreImpl) ByOrgPath(ctx context.Context, namespace string, per, page int, onlyPublic bool) (spaces []Space, total int, err error) {
+	query := s.db.Operator.Core.
+		NewSelect().
+		Model(&spaces).
+		Relation("Repository.Tags").
+		Relation("Repository.User").
+		Where("repository.path like ?", fmt.Sprintf("%s/%%", namespace))
+
+	if onlyPublic {
+		query = query.Where("repository.private = ?", false)
+	}
+	query = query.Order("space.created_at DESC").
+		Limit(per).
+		Offset((page - 1) * per)
+
+	err = query.Scan(ctx, &spaces)
+	err = errorx.HandleDBError(err, nil)
+	if err != nil {
+		return
+	}
+	total, err = query.Count(ctx)
+	err = errorx.HandleDBError(err, nil)
+	return
+}
+
+func (s *spaceStoreImpl) ListByPath(ctx context.Context, paths []string) ([]Space, error) {
+	var spaces []Space
+	err := s.db.Operator.Core.
+		NewSelect().
+		Model(&Space{}).
+		Relation("Repository").
+		Where("path IN (?)", bun.In(paths)).
+		Scan(ctx, &spaces)
+	err = errorx.HandleDBError(err, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find space by path,error: %w", err)
+	}
+
+	var sortedSpaces []Space
+	for _, path := range paths {
+		for _, ds := range spaces {
+			if ds.Repository.Path == path {
+				sortedSpaces = append(sortedSpaces, ds)
+			}
+		}
+	}
+
+	spaces = nil
+	return sortedSpaces, nil
+}
+
+func (s *spaceStoreImpl) CreateAndUpdateRepoPath(ctx context.Context, input Space, path string) (*Space, error) {
+	err := s.db.Core.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+		var repo Repository
+		_, err := tx.NewInsert().Model(&input).Exec(ctx, &input)
+		if err != nil {
+			return fmt.Errorf("failed to create space: %w", err)
+		}
+		repo, err = updateRepoPath(ctx, tx, types.SpaceRepo, path, input.RepositoryID)
+		if err != nil {
+			slog.ErrorContext(ctx, "failed to update repository path", slog.Any("err:", err))
+			return err
+		}
+		input.Repository = &repo
+		return nil
+	})
+	return &input, err
+}

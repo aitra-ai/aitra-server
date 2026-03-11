@@ -1,0 +1,1330 @@
+package database_test
+
+import (
+	"context"
+	"testing"
+	"time"
+
+	"github.com/stretchr/testify/require"
+	"opencsg.com/csghub-server/builder/deploy/common"
+	"opencsg.com/csghub-server/builder/store/database"
+	"opencsg.com/csghub-server/common/tests"
+	"opencsg.com/csghub-server/common/types"
+)
+
+func TestDeployTaskStore_CRUD(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	err := store.CreateDeploy(ctx, &database.Deploy{
+		DeployName: "dp1", SvcName: "s1",
+		RepoID:  123,
+		UserID:  456,
+		SpaceID: 321,
+		Type:    types.ServerlessType,
+	})
+	require.Nil(t, err)
+	dp := &database.Deploy{}
+	err = db.Core.NewSelect().Model(dp).Where("deploy_name=?", "dp1").Scan(ctx)
+	require.Nil(t, err)
+	require.Equal(t, dp.DeployName, "dp1")
+
+	dp, err = store.GetDeployByID(ctx, dp.ID)
+	require.Nil(t, err)
+	require.Equal(t, dp.DeployName, "dp1")
+
+	dp.DeployName = "foo"
+	err = store.UpdateDeploy(ctx, dp)
+	require.Nil(t, err)
+	err = db.Core.NewSelect().Model(dp).Where("deploy_name=?", "foo").Scan(ctx)
+	require.Nil(t, err)
+	require.Equal(t, dp.DeployName, "foo")
+
+	dp, err = store.GetDeployBySvcName(ctx, "s1")
+	require.Nil(t, err)
+	require.Equal(t, dp.DeployName, "foo")
+
+	err = store.StopDeploy(ctx, types.ModelRepo, 123, 456, dp.ID)
+	require.Nil(t, err)
+	dp, err = store.GetDeployByID(ctx, dp.ID)
+	require.Nil(t, err)
+	require.Equal(t, dp.Status, common.Stopped)
+
+	err = store.CreateDeploy(ctx, &database.Deploy{
+		DeployName: "dp2", SvcName: "s2",
+		RepoID:  123,
+		UserID:  456,
+		SpaceID: 321,
+	})
+	require.Nil(t, err)
+	dp, err = store.GetLatestDeployBySpaceID(ctx, 321)
+	require.Nil(t, err)
+	require.Equal(t, dp.SvcName, "s2")
+
+	dp, err = store.GetServerlessDeployByRepID(ctx, 123)
+	require.Nil(t, err)
+	require.Equal(t, dp.SvcName, "s1")
+	dps, total, err := store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 1, total)
+	require.Equal(t, dps[0].SvcName, "s1")
+
+	err = store.DeleteDeploy(ctx, types.ModelRepo, 123, 456, dp.ID)
+	require.Nil(t, err)
+	dp, err = store.GetDeployByID(ctx, dp.ID)
+	require.Nil(t, err)
+	require.Equal(t, dp.Status, common.Deleted)
+
+}
+
+func TestDeployTaskStore_DeleteNow(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	err := store.CreateDeploy(ctx, &database.Deploy{
+		DeployName: "dp1", SvcName: "s1",
+		RepoID:  123,
+		UserID:  456,
+		SpaceID: 321,
+		Type:    types.ServerlessType,
+	})
+	require.Nil(t, err)
+
+	dp, err := store.GetServerlessDeployByRepID(ctx, 123)
+	require.Nil(t, err)
+	require.Equal(t, dp.SvcName, "s1")
+	dps, total, err := store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 1, total)
+	require.Equal(t, dps[0].SvcName, "s1")
+
+	err = store.DeleteDeployNow(ctx, dp.ID)
+	require.Nil(t, err)
+	_, err = store.GetDeployByID(ctx, dp.ID)
+	require.NotNil(t, err)
+
+}
+
+func TestDeployTaskStore_DeployTaskCRUD(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	err := store.CreateDeployTask(ctx, &database.DeployTask{
+		DeployID: 1,
+		Message:  "foo",
+	})
+	require.Nil(t, err)
+	dp := &database.DeployTask{}
+	err = db.Core.NewSelect().Model(dp).Where("deploy_id=?", 1).Scan(ctx)
+	require.Nil(t, err)
+	require.Equal(t, dp.Message, "foo")
+
+	dp, err = store.GetDeployTask(ctx, dp.ID)
+	require.Nil(t, err)
+	require.Equal(t, dp.Message, "foo")
+
+	dp.Message = "bar"
+	err = store.UpdateDeployTask(ctx, dp)
+	require.Nil(t, err)
+	err = db.Core.NewSelect().Model(dp).Where("deploy_id=?", 1).Scan(ctx)
+	require.Nil(t, err)
+	require.Equal(t, dp.Message, "bar")
+
+	tasks, err := store.GetDeployTasksOfDeploy(ctx, 1)
+	require.Nil(t, err)
+	require.Equal(t, 1, len(tasks))
+	require.Equal(t, "bar", tasks[0].Message)
+
+}
+
+func TestDeployTaskStore_GetNewTaskAfter(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	err := store.CreateDeploy(ctx, &database.Deploy{SvcName: "svc"})
+	require.Nil(t, err)
+	dp, err := store.GetDeployBySvcName(ctx, "svc")
+	require.Nil(t, err)
+
+	tasks := []*database.DeployTask{
+		{TaskType: 0, Status: 0, Message: "t1"},
+		{TaskType: 0, Status: 1, Message: "t2"},
+		{TaskType: 0, Status: 2, Message: "t3"},
+		{TaskType: 0, Status: 3, Message: "t4"},
+		{TaskType: 1, Status: 0, Message: "t5"},
+		{TaskType: 1, Status: 1, Message: "t6"},
+		{TaskType: 1, Status: 2, Message: "t7"},
+		{TaskType: 1, Status: 3, Message: "t8"},
+	}
+
+	for _, tk := range tasks {
+		tk.DeployID = dp.ID
+		err = store.CreateDeployTask(ctx, tk)
+		require.Nil(t, err)
+	}
+
+	for _, c := range []struct {
+		current  int64
+		expected string
+		err      bool
+	}{
+		{0, "t1", false},
+		{tasks[0].ID, "t2", false},
+		{tasks[1].ID, "t5", false},
+		{tasks[2].ID, "t5", false},
+		{tasks[3].ID, "t5", false},
+		{tasks[4].ID, "t6", false},
+		{tasks[5].ID, "t8", false},
+		{tasks[6].ID, "t8", false},
+		{tasks[7].ID, "t8", true},
+	} {
+		tk, err := store.GetNewTaskAfter(ctx, c.current)
+		if c.err {
+			require.NotNil(t, err)
+		} else {
+			require.Nil(t, err)
+			require.Equal(t, c.expected, tk.Message)
+		}
+	}
+
+	first, err := store.GetNewTaskFirst(ctx)
+	require.Nil(t, err)
+	require.Equal(t, "t1", first.Message)
+
+}
+
+func TestDeployTaskStore_UpdateInTx(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+	err := store.CreateDeploy(ctx, &database.Deploy{
+		SvcName:   "svc",
+		GitPath:   "test",
+		GitBranch: "test",
+		Endpoint:  "test",
+		Env:       "test",
+	})
+	require.Nil(t, err)
+	dp, err := store.GetDeployBySvcName(ctx, "svc")
+	require.Nil(t, err)
+
+	tasks := []*database.DeployTask{
+		{TaskType: 3, Status: 1, Message: "t1"},
+		{TaskType: 3, Status: 2, Message: "t2"},
+	}
+
+	for _, tk := range tasks {
+		tk.DeployID = dp.ID
+		err = store.CreateDeployTask(ctx, tk)
+		require.Nil(t, err)
+	}
+	tasks[0].Message = "t1new"
+	tasks[0].TaskType = 1
+	tasks[0].Status = 3
+	tasks[1].Message = "t2new"
+	tasks[1].TaskType = 1
+	tasks[1].Status = 3
+
+	dp.GitPath = "foo/bar"
+	dp.GitBranch = "new"
+	dp.Endpoint = "eee"
+	dp.Env = "env"
+	err = store.UpdateInTx(ctx, []string{"git_path", "git_branch"}, []string{"message"}, dp, tasks...)
+	require.Nil(t, err)
+
+	dp, err = store.GetDeployBySvcName(ctx, "svc")
+	require.Nil(t, err)
+	require.Equal(t, "foo/bar", dp.GitPath)
+	require.Equal(t, "new", dp.GitBranch)
+	require.Equal(t, "test", dp.Endpoint)
+	require.Equal(t, "test", dp.Env)
+
+	tasks, err = store.GetDeployTasksOfDeploy(ctx, dp.ID)
+	require.Nil(t, err)
+	messages := []string{}
+	types := []int{}
+	for _, t := range tasks {
+		messages = append(messages, t.Message)
+		types = append(types, t.TaskType)
+	}
+	require.ElementsMatch(t, []string{"t1new", "t2new"}, messages)
+	require.ElementsMatch(t, []int{3, 3}, types)
+
+}
+
+func TestDeployTaskStore_GetRunningDeployByUserID(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+	deploys := []database.Deploy{
+		{UserID: 123, Type: 1, Status: common.Running, DeployName: "d1"},
+		{UserID: 123, Type: 0, Status: common.Running, DeployName: "d2"},
+		{UserID: 123, Type: 2, Status: common.Running, DeployName: "d3"},
+		{UserID: 123, Type: 3, Status: common.Running, DeployName: "d4"},
+		{UserID: 123, Type: 1, Status: common.Stopped, DeployName: "d5"},
+		{UserID: 456, Type: 1, Status: common.Running, DeployName: "d6"},
+	}
+
+	for _, dp := range deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+	}
+
+	dps, err := store.GetRunningDeployByUserID(ctx, 123)
+	require.Nil(t, err)
+	names := []string{}
+	for _, dp := range dps {
+		names = append(names, dp.DeployName)
+	}
+	require.ElementsMatch(t, []string{"d1", "d2", "d3"}, names)
+
+}
+
+func TestDeployTaskStore_RunningVisibleToUser(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	// user 1 's public dedicated inference
+	deploy1 := database.Deploy{
+		ID:          1,
+		DeployName:  "deploy1",
+		SvcName:     "svc1",
+		RepoID:      1,
+		UserID:      1,
+		Type:        1,
+		SecureLevel: 1,
+		Status:      common.Running,
+	}
+	// user 2 's public fintune
+	deploy2 := database.Deploy{
+		ID:          2,
+		DeployName:  "deploy2",
+		SvcName:     "svc2",
+		RepoID:      2,
+		UserID:      2,
+		Type:        2,
+		SecureLevel: 1,
+		Status:      common.Running,
+	}
+	// user 1 's private dedicated inference
+	deploy3 := database.Deploy{
+		ID:          3,
+		DeployName:  "deploy3",
+		SvcName:     "svc3",
+		RepoID:      3,
+		UserID:      1,
+		Type:        1,
+		SecureLevel: 2, //private
+		Status:      common.Running,
+	}
+	// user 2 's public dedicated inference
+	deploy4 := database.Deploy{
+		ID:          4,
+		DeployName:  "deploy4",
+		SvcName:     "svc4",
+		RepoID:      4,
+		UserID:      2,
+		Type:        1,
+		SecureLevel: 1,
+		Status:      common.Running,
+	}
+	// user 3 's serverless inference
+	deploy5 := database.Deploy{
+		ID:          5,
+		DeployName:  "deploy5",
+		SvcName:     "svc5",
+		RepoID:      5,
+		UserID:      3,
+		Type:        3,
+		SecureLevel: 1,
+		Status:      common.Running,
+	}
+	// user 3 's serverless inference not running
+	deploy6 := database.Deploy{
+		ID:          6,
+		DeployName:  "deploy6",
+		SvcName:     "svc6",
+		RepoID:      6,
+		UserID:      3,
+		Type:        3,
+		SecureLevel: 1,
+		Status:      common.Stopped,
+	}
+
+	// Insert test data into the database
+	err := store.CreateDeploy(ctx, &deploy1)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy2)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy3)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy4)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy5)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy6)
+	require.Nil(t, err)
+
+	// Test RunningVisibleToUser with user ID 1
+	deploys, err := store.RunningVisibleToUser(ctx, 1)
+	require.Nil(t, err)
+	require.Len(t, deploys, 4)
+	require.Equal(t, deploy1.ID, deploys[0].ID)
+	require.Equal(t, deploy3.ID, deploys[1].ID)
+	require.Equal(t, deploy4.ID, deploys[2].ID)
+	require.Equal(t, deploy5.ID, deploys[3].ID)
+
+	// Test RunningVisibleToUser with user ID 2
+	deploys, err = store.RunningVisibleToUser(ctx, 2)
+	require.Nil(t, err)
+	require.Len(t, deploys, 3)
+	require.Equal(t, deploy1.ID, deploys[0].ID)
+	require.Equal(t, deploy4.ID, deploys[1].ID)
+	require.Equal(t, deploy5.ID, deploys[2].ID)
+
+	// Test RunningVisibleToUser with user ID 3
+	deploys, err = store.RunningVisibleToUser(ctx, 3)
+	require.Nil(t, err)
+	require.Len(t, deploys, 3)
+	require.Equal(t, deploy1.ID, deploys[0].ID)
+	require.Equal(t, deploy4.ID, deploys[1].ID)
+	require.Equal(t, deploy5.ID, deploys[2].ID)
+}
+
+func TestDeployTaskStore_ListAllDeploys(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+	// user 1 's public dedicated inference
+	deploy1 := database.Deploy{
+		ID:          1,
+		DeployName:  "deploy1",
+		SvcName:     "svc1",
+		RepoID:      1,
+		UserID:      1,
+		Type:        1,
+		SecureLevel: 1,
+		Status:      common.Running,
+	}
+	// user 2 's public fintune
+	deploy2 := database.Deploy{
+		ID:          2,
+		DeployName:  "deploy2",
+		SvcName:     "svc2",
+		RepoID:      2,
+		UserID:      2,
+		Type:        2,
+		SecureLevel: 1,
+		Status:      common.Running,
+	}
+	// user 1 's private dedicated inference
+	deploy3 := database.Deploy{
+		ID:          3,
+		DeployName:  "deploy3",
+		SvcName:     "svc3",
+		RepoID:      3,
+		UserID:      1,
+		Type:        1,
+		SecureLevel: 1,
+		Status:      common.Deleted,
+	}
+	// user 2 's public dedicated inference
+	deploy4 := database.Deploy{
+		ID:          4,
+		DeployName:  "deploy4",
+		SvcName:     "svc4",
+		RepoID:      4,
+		UserID:      2,
+		Type:        1,
+		SecureLevel: 1,
+		Status:      common.Running,
+	}
+	// user 3 's serverless inference
+	deploy5 := database.Deploy{
+		ID:          5,
+		DeployName:  "deploy5",
+		SvcName:     "svc5",
+		RepoID:      5,
+		UserID:      3,
+		Type:        3,
+		SecureLevel: 1,
+		Status:      common.Deleted,
+	}
+	// user 3 's serverless inference not running
+	deploy6 := database.Deploy{
+		ID:          6,
+		DeployName:  "deploy6",
+		SvcName:     "svc6",
+		RepoID:      6,
+		UserID:      3,
+		Type:        3,
+		SecureLevel: 1,
+		Status:      common.Stopped,
+	}
+
+	// Insert test data into the database
+	err := store.CreateDeploy(ctx, &deploy1)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy2)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy3)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy4)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy5)
+	require.Nil(t, err)
+	err = store.CreateDeploy(ctx, &deploy6)
+	require.Nil(t, err)
+	var req types.DeployReq
+	req.Page = 1
+	req.PageSize = 300
+	_, total, err := store.ListAllDeploys(ctx, req, true)
+	require.Nil(t, err)
+	require.Equal(t, total, 4)
+
+}
+
+func TestDeployTaskStore_ListAllRunningDeploys(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	deploys := []database.Deploy{
+		{UserID: 111, Type: 1, Status: common.Running, DeployName: "running1"},
+		{UserID: 111, Type: 2, Status: common.Stopped, DeployName: "stopped1"},
+		{UserID: 222, Type: 1, Status: common.Running, DeployName: "running2"},
+		{UserID: 222, Type: 2, Status: common.Deploying, DeployName: "deploy1"},
+	}
+
+	for _, dp := range deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+	}
+
+	// Only test running ones
+	result, err := store.ListAllRunningDeploys(ctx)
+	require.Nil(t, err)
+
+	names := []string{}
+	for _, dp := range result {
+		names = append(names, dp.DeployName)
+	}
+
+	// Only expect running deploys
+	require.ElementsMatch(t, []string{"running1", "running2"}, names)
+}
+
+func TestDeployTaskStore_ListDeployBytype(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	deploys := []database.Deploy{
+		{UserID: 111, Type: 1, Status: common.Running, DeployName: "running1"},
+		{UserID: 111, Type: 2, Status: common.Stopped, DeployName: "stopped1"},
+		{UserID: 222, Type: 1, Status: common.Running, DeployName: "running2"},
+		{UserID: 222, Type: 2, Status: common.Deploying, DeployName: "deploy1"},
+	}
+
+	for _, dp := range deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+	}
+
+	now := time.Now().UTC().Truncate(time.Second)
+	older := now.Add(-72 * time.Hour)
+	middle := now.Add(-12 * time.Hour)
+	latest := now.Add(-1 * time.Hour)
+	_, err := db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", older, older, "running1")
+	require.NoError(t, err)
+	_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", older.Add(24*time.Hour), older.Add(24*time.Hour), "stopped1")
+	require.NoError(t, err)
+	_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", middle, middle, "running2")
+	require.NoError(t, err)
+	_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", latest, latest, "deploy1")
+	require.NoError(t, err)
+
+	// Only test running ones
+	var req types.DeployReq
+	req.Page = 1
+	req.PageSize = 10
+	result, _, err := store.ListDeployByType(ctx, req)
+	require.Nil(t, err)
+	require.Equal(t, 4, len(result))
+	req.Status = []int{common.Running}
+	result, _, err = store.ListDeployByType(ctx, req)
+	require.Nil(t, err)
+	require.Equal(t, 2, len(result))
+
+	startWindow := now.Add(-24 * time.Hour)
+	req.StartTime = &startWindow
+	endDate, err := time.ParseInLocation("2006-01-02", now.Format("2006-01-02"), time.UTC)
+	require.NoError(t, err)
+	endWindow := endDate.Add(24*time.Hour - time.Nanosecond)
+	req.EndTime = &endWindow
+	result, _, err = store.ListDeployByType(ctx, req)
+	require.Nil(t, err)
+	require.Equal(t, 1, len(result))
+	require.Equal(t, "running2", result[0].DeployName)
+
+	startWindow = now.Add(-5 * time.Hour)
+	req.StartTime = &startWindow
+	endWindow = now
+	req.EndTime = &endWindow
+	result, _, err = store.ListDeployByType(ctx, req)
+	require.Nil(t, err)
+	require.Equal(t, 0, len(result))
+}
+func TestDeployTaskStore_DeleteDeployByID(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	// Create a deploy for user 100
+	deploy := &database.Deploy{
+		DeployName: "delete-by-id",
+		SvcName:    "svc-delete",
+		RepoID:     1001,
+		UserID:     100,
+		SpaceID:    0,
+		Type:       types.ServerlessType,
+		Status:     common.Running,
+	}
+	err := store.CreateDeploy(ctx, deploy)
+	require.Nil(t, err)
+
+	// Fetch the deploy to get its ID
+	got, err := store.GetDeployBySvcName(ctx, "svc-delete")
+	require.Nil(t, err)
+	require.Equal(t, "delete-by-id", got.DeployName)
+
+	// Delete the deploy by ID and userID
+	err = store.DeleteDeployByID(ctx, 100, got.ID)
+	require.Nil(t, err)
+
+	// The status should now be Deleted
+	got, err = store.GetDeployByID(ctx, got.ID)
+	require.Nil(t, err)
+	require.Equal(t, common.Deleted, got.Status)
+
+	// Try deleting with wrong userID, should get error
+	err = store.DeleteDeployByID(ctx, 999, got.ID)
+	require.NotNil(t, err)
+
+	// Try deleting a non-existent deploy
+	err = store.DeleteDeployByID(ctx, 100, 999999)
+	require.NotNil(t, err)
+}
+
+func TestDeployTaskStore_GetLatestDeploysBySpaceIDs(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	// Test with empty spaceIDs
+	result, err := store.GetLatestDeploysBySpaceIDs(ctx, []int64{})
+	require.Nil(t, err)
+	require.NotNil(t, result)
+	require.Equal(t, 0, len(result))
+
+	// Create test data: multiple deploys for different space IDs
+	// Space 100: 3 deploys (should return the latest)
+	// Space 200: 2 deploys (should return the latest)
+	// Space 300: 1 deploy (should return that one)
+	// Space 400: no deploys (should not appear in result)
+
+	now := time.Now().UTC()
+	space100Deploys := []database.Deploy{
+		{SpaceID: 100, DeployName: "space100-old", SvcName: "svc100-1", UserID: 1, RepoID: 1, GitPath: "test", GitBranch: "main", Template: "test", Hardware: "test"},
+		{SpaceID: 100, DeployName: "space100-middle", SvcName: "svc100-2", UserID: 1, RepoID: 1, GitPath: "test", GitBranch: "main", Template: "test", Hardware: "test"},
+		{SpaceID: 100, DeployName: "space100-latest", SvcName: "svc100-3", UserID: 1, RepoID: 1, GitPath: "test", GitBranch: "main", Template: "test", Hardware: "test"},
+	}
+
+	space200Deploys := []database.Deploy{
+		{SpaceID: 200, DeployName: "space200-old", SvcName: "svc200-1", UserID: 1, RepoID: 2, GitPath: "test", GitBranch: "main", Template: "test", Hardware: "test"},
+		{SpaceID: 200, DeployName: "space200-latest", SvcName: "svc200-2", UserID: 1, RepoID: 2, GitPath: "test", GitBranch: "main", Template: "test", Hardware: "test"},
+	}
+
+	space300Deploy := database.Deploy{
+		SpaceID: 300, DeployName: "space300-single", SvcName: "svc300-1", UserID: 1, RepoID: 3, GitPath: "test", GitBranch: "main", Template: "test", Hardware: "test",
+	}
+
+	// Create deploys with different timestamps
+	for i, dp := range space100Deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+		// Set created_at to different times (oldest first)
+		_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE id = ?",
+			now.Add(-time.Duration(3-i)*time.Hour), now.Add(-time.Duration(3-i)*time.Hour), dp.ID)
+		require.NoError(t, err)
+	}
+
+	for i, dp := range space200Deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+		// Set created_at to different times (oldest first)
+		_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE id = ?",
+			now.Add(-time.Duration(2-i)*time.Hour), now.Add(-time.Duration(2-i)*time.Hour), dp.ID)
+		require.NoError(t, err)
+	}
+
+	err = store.CreateDeploy(ctx, &space300Deploy)
+	require.Nil(t, err)
+
+	// Test: Get latest deploys for space 100, 200, 300, 400
+	spaceIDs := []int64{100, 200, 300, 400}
+	result, err = store.GetLatestDeploysBySpaceIDs(ctx, spaceIDs)
+	require.Nil(t, err)
+	require.NotNil(t, result)
+
+	// Should have 3 results (space 400 has no deploys, so won't appear)
+	require.Equal(t, 3, len(result))
+
+	// Verify space 100 has the latest deploy
+	deploy100, exists := result[100]
+	require.True(t, exists)
+	require.NotNil(t, deploy100)
+	require.Equal(t, "space100-latest", deploy100.DeployName)
+	require.Equal(t, "svc100-3", deploy100.SvcName)
+
+	// Verify space 200 has the latest deploy
+	deploy200, exists := result[200]
+	require.True(t, exists)
+	require.NotNil(t, deploy200)
+	require.Equal(t, "space200-latest", deploy200.DeployName)
+	require.Equal(t, "svc200-2", deploy200.SvcName)
+
+	// Verify space 300 has its deploy
+	deploy300, exists := result[300]
+	require.True(t, exists)
+	require.NotNil(t, deploy300)
+	require.Equal(t, "space300-single", deploy300.DeployName)
+	require.Equal(t, "svc300-1", deploy300.SvcName)
+
+	// Verify space 400 is not in the result (no deploys)
+	_, exists = result[400]
+	require.False(t, exists)
+
+	// Test with only space IDs that don't exist
+	result, err = store.GetLatestDeploysBySpaceIDs(ctx, []int64{999, 998})
+	require.Nil(t, err)
+	require.NotNil(t, result)
+	require.Equal(t, 0, len(result))
+}
+
+func TestDeployTaskStore_ListServerless_Search(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	// Create test serverless deploys with different deploy names and git paths
+	deploys := []database.Deploy{
+		{
+			DeployName: "qwen-model-deploy",
+			GitPath:    "models_namespace1/qwen-model",
+			GitBranch:  "main",
+			Template:   "test",
+			Hardware:   "test",
+			Type:       types.ServerlessType,
+			Status:     common.Running,
+			RepoID:     1,
+			UserID:     1,
+			SpaceID:    0,
+			SvcName:    "svc1",
+		},
+		{
+			DeployName: "test-deploy",
+			GitPath:    "models_namespace2/test-model",
+			GitBranch:  "main",
+			Template:   "test",
+			Hardware:   "test",
+			Type:       types.ServerlessType,
+			Status:     common.Running,
+			RepoID:     2,
+			UserID:     1,
+			SpaceID:    0,
+			SvcName:    "svc2",
+		},
+		{
+			DeployName: "QWEN-Deploy-Upper",
+			GitPath:    "models_namespace3/another-model",
+			GitBranch:  "main",
+			Template:   "test",
+			Hardware:   "test",
+			Type:       types.ServerlessType,
+			Status:     common.Running,
+			RepoID:     3,
+			UserID:     1,
+			SpaceID:    0,
+			SvcName:    "svc3",
+		},
+		{
+			DeployName: "other-deploy",
+			GitPath:    "models_namespace4/qwen-other",
+			GitBranch:  "main",
+			Template:   "test",
+			Hardware:   "test",
+			Type:       types.ServerlessType,
+			Status:     common.Running,
+			RepoID:     4,
+			UserID:     1,
+			SpaceID:    0,
+			SvcName:    "svc4",
+		},
+		{
+			DeployName: "deleted-deploy",
+			GitPath:    "models_namespace5/qwen-deleted",
+			GitBranch:  "main",
+			Template:   "test",
+			Hardware:   "test",
+			Type:       types.ServerlessType,
+			Status:     common.Deleted,
+			RepoID:     5,
+			UserID:     1,
+			SpaceID:    0,
+			SvcName:    "svc5",
+		},
+		{
+			DeployName: "non-serverless",
+			GitPath:    "models_namespace6/qwen-non-serverless",
+			GitBranch:  "main",
+			Template:   "test",
+			Hardware:   "test",
+			Type:       types.InferenceType,
+			Status:     common.Running,
+			RepoID:     6,
+			UserID:     1,
+			SpaceID:    0,
+			SvcName:    "svc6",
+		},
+	}
+
+	for _, dp := range deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+	}
+
+	// Test 1: List all serverless (no search)
+	dps, total, err := store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 4, total) // 4 serverless deploys (excluding deleted and non-serverless)
+	require.Equal(t, 4, len(dps))
+
+	// Test 2: Search by deploy_name (case-insensitive)
+	dps, total, err = store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		Query:      "qwen",
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total) // qwen-model-deploy, QWEN-Deploy-Upper, qwen-other (in git_path)
+	require.Equal(t, 3, len(dps))
+	deployNames := []string{}
+	for _, dp := range dps {
+		deployNames = append(deployNames, dp.DeployName)
+	}
+	require.Contains(t, deployNames, "qwen-model-deploy")
+	require.Contains(t, deployNames, "QWEN-Deploy-Upper")
+	require.Contains(t, deployNames, "other-deploy") // matches git_path
+
+	// Test 3: Search by git_path
+	dps, total, err = store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		Query:      "namespace2",
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 1, total)
+	require.Equal(t, 1, len(dps))
+	require.Equal(t, "test-deploy", dps[0].DeployName)
+
+	// Test 4: Search with uppercase (case-insensitive)
+	dps, total, err = store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		Query:      "QWEN",
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total) // Should match lowercase and uppercase
+	require.Equal(t, 3, len(dps))
+
+	// Test 5: Search with empty string (should return all)
+	dps, total, err = store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		Query:      "",
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 4, total)
+	require.Equal(t, 4, len(dps))
+
+	// Test 6: Search with whitespace (should be trimmed and return all)
+	dps, total, err = store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		Query:      "   ",
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 4, total)
+	require.Equal(t, 4, len(dps))
+
+	// Test 7: Search with no matches
+	dps, total, err = store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		Query:      "nonexistent",
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 10,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 0, total)
+	require.Equal(t, 0, len(dps))
+
+	// Test 8: Search with pagination
+	dps, total, err = store.ListServerless(ctx, types.DeployReq{
+		DeployType: types.ServerlessType,
+		Query:      "qwen",
+		PageOpts: types.PageOpts{
+			Page:     1,
+			PageSize: 2,
+		},
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total)    // Total should be 4
+	require.Equal(t, 2, len(dps)) // But only 2 per page
+}
+
+func TestDeployTaskStore_GetClusterDeploys(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	runningStatus := common.Running
+
+	// Create test users first (since we need to join with users table)
+	user1 := &database.User{Username: "user1", NickName: "User One", Email: "user1@test.com", UUID: "uuid-user-1"}
+	user2 := &database.User{Username: "user2", NickName: "User Two", Email: "user2@test.com", UUID: "uuid-user-2"}
+	user3 := &database.User{Username: "user3", NickName: "User Three", Email: "user3@test.com", UUID: "uuid-user-3"}
+
+	for _, u := range []*database.User{user1, user2, user3} {
+		_, err := db.Core.NewInsert().Model(u).Exec(ctx)
+		require.Nil(t, err)
+	}
+
+	// Create test deploys with different cluster configurations
+	deploys := []database.Deploy{
+		{
+			DeployName:  "deploy-cluster1",
+			SvcName:     "svc-cluster1",
+			RepoID:      1,
+			UserID:      user1.ID,
+			ClusterID:   "cluster-1",
+			ClusterNode: "node-a,node-b",
+			Status:      common.Running,
+			Hardware:    "nvidia-a100",
+			Type:        types.InferenceType,
+			GitPath:     "test",
+			GitBranch:   "main",
+			Template:    "test",
+		},
+		{
+			DeployName:  "deploy-cluster1-nodea",
+			SvcName:     "svc-cluster1-nodea",
+			RepoID:      2,
+			UserID:      user2.ID,
+			ClusterID:   "cluster-1",
+			ClusterNode: "node-a",
+			Status:      common.Deploying,
+			Hardware:    "nvidia-v100",
+			Type:        types.InferenceType,
+			GitPath:     "test",
+			GitBranch:   "main",
+			Template:    "test",
+		},
+		{
+			DeployName:  "deploy-cluster2",
+			SvcName:     "svc-cluster2",
+			RepoID:      3,
+			UserID:      user3.ID,
+			ClusterID:   "cluster-2",
+			ClusterNode: "node-c",
+			Status:      common.Running,
+			Hardware:    "nvidia-a100",
+			Type:        types.SpaceType,
+			GitPath:     "test",
+			GitBranch:   "main",
+			Template:    "test",
+		},
+		{
+			DeployName: "deploy-nocluster",
+			SvcName:    "svc-nocluster",
+			RepoID:     4,
+			UserID:     user1.ID,
+			ClusterID:  "",
+			Status:     common.Stopped,
+			Hardware:   "cpu",
+			Type:       types.FinetuneType,
+			GitPath:    "test",
+			GitBranch:  "main",
+			Template:   "test",
+		},
+		{
+			DeployName:  "deploy-cluster1-stopped",
+			SvcName:     "svc-cluster1-stopped",
+			RepoID:      5,
+			UserID:      user2.ID,
+			ClusterID:   "cluster-1",
+			ClusterNode: "node-b",
+			Status:      common.Stopped,
+			Hardware:    "nvidia-a100",
+			Type:        types.InferenceType,
+			GitPath:     "test",
+			GitBranch:   "main",
+			Template:    "test",
+		},
+	}
+
+	for _, dp := range deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+	}
+
+	// Test 1: Filter by ClusterID
+	result, total, err := store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ClusterID: "cluster-1",
+		Per:       10,
+		Page:      1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total)
+	require.Equal(t, 3, len(result))
+	names := []string{}
+	for _, dp := range result {
+		names = append(names, dp.DeployName)
+	}
+	require.ElementsMatch(t, []string{"deploy-cluster1", "deploy-cluster1-nodea", "deploy-cluster1-stopped"}, names)
+
+	// Test 2: Filter by ClusterNode
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ClusterNode: "node-a",
+		Per:         10,
+		Page:        1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 2, total)
+	require.Equal(t, 2, len(result))
+	names = []string{}
+	for _, dp := range result {
+		names = append(names, dp.DeployName)
+	}
+	require.ElementsMatch(t, []string{"deploy-cluster1", "deploy-cluster1-nodea"}, names)
+
+	// Test 3: Filter by Status
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		Status: runningStatus,
+		Per:    10,
+		Page:   1,
+	})
+	require.Nil(t, err)
+	require.Nil(t, err)
+	require.Equal(t, 2, total)
+	require.Equal(t, 2, len(result))
+	names = []string{}
+	for _, dp := range result {
+		names = append(names, dp.DeployName)
+		require.Equal(t, common.Running, dp.Status)
+	}
+	require.ElementsMatch(t, []string{"deploy-cluster1", "deploy-cluster2"}, names)
+
+	// Test 4: Filter by ResourceName (Hardware)
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ResourceName: "nvidia-a100",
+		Per:          10,
+		Page:         1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total)
+	require.Equal(t, 3, len(result))
+	names = []string{}
+	for _, dp := range result {
+		names = append(names, dp.DeployName)
+		require.Equal(t, "nvidia-a100", dp.Hardware)
+	}
+	require.ElementsMatch(t, []string{"deploy-cluster1", "deploy-cluster2", "deploy-cluster1-stopped"}, names)
+
+	// Test 5: Filter by Search (svc_name)
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		Search: "svc-cluster1-nodea",
+		Per:    10,
+		Page:   1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 1, total)
+	require.Equal(t, 1, len(result))
+	require.Equal(t, "deploy-cluster1-nodea", result[0].DeployName)
+
+	// Test 6: Filter by Search (username)
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		Search: "user1",
+		Per:    10,
+		Page:   1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 2, total)
+	require.Equal(t, 2, len(result))
+	names = []string{}
+	for _, dp := range result {
+		names = append(names, dp.DeployName)
+	}
+	require.ElementsMatch(t, []string{"deploy-cluster1", "deploy-nocluster"}, names)
+
+	// Test 7: Combined filters
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ClusterID:    "cluster-1",
+		Status:       runningStatus,
+		ResourceName: "nvidia-a100",
+		Per:          10,
+		Page:         1,
+	})
+	require.Nil(t, err)
+	require.Nil(t, err)
+	require.Equal(t, 1, total)
+	require.Equal(t, 1, len(result))
+	require.Equal(t, "deploy-cluster1", result[0].DeployName)
+
+	// Test 8: Pagination
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ClusterID: "cluster-1",
+		Per:       2,
+		Page:      1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total)
+	require.Equal(t, 2, len(result))
+
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ClusterID: "cluster-1",
+		Per:       2,
+		Page:      2,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total)
+	require.Equal(t, 1, len(result))
+
+	// Test 9: No filters (all deploys)
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		Per:  10,
+		Page: 1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 5, total)
+	require.Equal(t, 5, len(result))
+
+	// Test 10: Non-existent cluster
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ClusterID: "non-existent-cluster",
+		Per:       10,
+		Page:      1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 0, total)
+	require.Equal(t, 0, len(result))
+
+	// Test 11: Verify User relation is loaded
+	result, total, err = store.GetClusterDeploys(ctx, types.ClusterDeployReq{
+		ClusterID: "cluster-2",
+		Per:       10,
+		Page:      1,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 1, total)
+	require.NotNil(t, result[0].User)
+	require.Equal(t, "user3", result[0].User.Username)
+}
+
+func TestDeployTaskStore_ListDeploysByTimeRange(t *testing.T) {
+	db := tests.InitTestDB()
+	defer db.Close()
+	ctx := context.TODO()
+
+	store := database.NewDeployTaskStoreWithDB(db)
+
+	now := time.Now().UTC().Truncate(time.Second)
+
+	// Create test users first (since we need to join with users table)
+	user1 := &database.User{Username: "user1", NickName: "User One", Email: "user1@test.com", UUID: "uuid-user-1"}
+	user2 := &database.User{Username: "user2", NickName: "User Two", Email: "user2@test.com", UUID: "uuid-user-2"}
+
+	for _, u := range []*database.User{user1, user2} {
+		_, err := db.Core.NewInsert().Model(u).Exec(ctx)
+		require.Nil(t, err)
+	}
+
+	// Create deploys with different timestamps
+	deploys := []database.Deploy{
+		{UserID: user1.ID, Type: 1, Status: common.Running, DeployName: "deploy-old", SvcName: "svc-old", RepoID: 1},
+		{UserID: user1.ID, Type: 1, Status: common.Running, DeployName: "deploy-middle", SvcName: "svc-middle", RepoID: 2},
+		{UserID: user2.ID, Type: 1, Status: common.Running, DeployName: "deploy-recent", SvcName: "svc-recent", RepoID: 3},
+		{UserID: user2.ID, Type: 2, Status: common.Stopped, DeployName: "deploy-stopped", SvcName: "svc-stopped", RepoID: 4},
+	}
+
+	for _, dp := range deploys {
+		err := store.CreateDeploy(ctx, &dp)
+		require.Nil(t, err)
+	}
+
+	// Set different timestamps for each deploy
+	// deploy-old: 72 hours ago
+	// deploy-middle: 24 hours ago
+	// deploy-recent: 2 hours ago
+	// deploy-stopped: 1 hour ago
+	older := now.Add(-72 * time.Hour)
+	middle := now.Add(-24 * time.Hour)
+	recent := now.Add(-2 * time.Hour)
+	latest := now.Add(-1 * time.Hour)
+
+	_, err := db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", older, older, "deploy-old")
+	require.NoError(t, err)
+	_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", middle, middle, "deploy-middle")
+	require.NoError(t, err)
+	_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", recent, recent, "deploy-recent")
+	require.NoError(t, err)
+	_, err = db.BunDB.ExecContext(ctx, "UPDATE deploys SET created_at = ?, updated_at = ? WHERE deploy_name = ?", latest, latest, "deploy-stopped")
+	require.NoError(t, err)
+
+	// Test 1: Query with no time filter (should return all)
+	result, total, err := store.ListDeploysByTimeRange(ctx, types.DeployTimeRangeReq{})
+	require.Nil(t, err)
+	require.Equal(t, 4, total)
+	require.Equal(t, 4, len(result))
+
+	// Test 2: Query with start time only (last 48 hours)
+	startTime := now.Add(-48 * time.Hour)
+	result, total, err = store.ListDeploysByTimeRange(ctx, types.DeployTimeRangeReq{
+		StartTime: &startTime,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total) // deploy-middle, deploy-recent, deploy-stopped
+	require.Equal(t, 3, len(result))
+
+	// Test 3: Query with end time only (before 48 hours ago)
+	endTime := now.Add(-48 * time.Hour)
+	result, total, err = store.ListDeploysByTimeRange(ctx, types.DeployTimeRangeReq{
+		EndTime: &endTime,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 1, total) // deploy-old only
+	require.Equal(t, 1, len(result))
+	require.Equal(t, "deploy-old", result[0].DeployName)
+
+	// Test 4: Query with both start and end time (last 25 hours)
+	startTime = now.Add(-25 * time.Hour)
+	endTime = now
+	result, total, err = store.ListDeploysByTimeRange(ctx, types.DeployTimeRangeReq{
+		StartTime: &startTime,
+		EndTime:   &endTime,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 3, total) // deploy-middle, deploy-recent, deploy-stopped
+	require.Equal(t, 3, len(result))
+
+	// Verify results are ordered by created_at DESC
+	for i := 0; i < len(result)-1; i++ {
+		require.True(t, result[i].CreatedAt.After(result[i+1].CreatedAt) || result[i].CreatedAt.Equal(result[i+1].CreatedAt),
+			"Results should be ordered by created_at DESC")
+	}
+
+	// Test 5: Query with very narrow time range (no results)
+	narrowStart := now.Add(-30 * time.Minute)
+	narrowEnd := now.Add(-20 * time.Minute)
+	result, total, err = store.ListDeploysByTimeRange(ctx, types.DeployTimeRangeReq{
+		StartTime: &narrowStart,
+		EndTime:   &narrowEnd,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 0, total)
+	require.Equal(t, 0, len(result))
+
+	// Test 6: Query with time range covering all (last 200 hours)
+	wideStart := now.Add(-200 * time.Hour)
+	wideEnd := now
+	result, total, err = store.ListDeploysByTimeRange(ctx, types.DeployTimeRangeReq{
+		StartTime: &wideStart,
+		EndTime:   &wideEnd,
+	})
+	require.Nil(t, err)
+	require.Equal(t, 4, total)
+	require.Equal(t, 4, len(result))
+
+	// Test 7: Verify User relation is loaded
+	result, _, err = store.ListDeploysByTimeRange(ctx, types.DeployTimeRangeReq{})
+	require.Nil(t, err)
+	for _, dp := range result {
+		require.NotNil(t, dp.User, "User relation should be loaded")
+	}
+}

@@ -1,0 +1,110 @@
+{
+    "error.GIT-ERR-0": {
+        "other": "克隆仓库失败"
+    },
+    "error.GIT-ERR-1": {
+        "other": "从仓库拉取更新失败"
+    },
+    "error.GIT-ERR-10": {
+        "other": "查找分支失败"
+    },
+    "error.GIT-ERR-11": {
+        "other": "未找到该分支"
+    },
+    "error.GIT-ERR-12": {
+        "other": "删除分支失败"
+    },
+    "error.GIT-ERR-15": {
+        "other": "在仓库中未找到该文件"
+    },
+    "error.GIT-ERR-16": {
+        "other": "文件上传失败"
+    },
+    "error.GIT-ERR-17": {
+        "other": "文件下载失败"
+    },
+    "error.GIT-ERR-18": {
+        "other": "连接Git服务器失败"
+    },
+    "error.GIT-ERR-19": {
+        "other": "Git LFS操作失败"
+    },
+    "error.GIT-ERR-2": {
+        "other": "推送更新到仓库失败"
+    },
+    "error.GIT-ERR-20": {
+        "other": "文件过大"
+    },
+    "error.GIT-ERR-21": {
+        "other": "获取 git tree entry 失败"
+    },
+    "error.GIT-ERR-22": {
+        "other": "提交 git 文件失败"
+    },
+    "error.GIT-ERR-23": {
+        "other": "获取 git blobs 失败"
+    },
+    "error.GIT-ERR-24": {
+        "other": "获取 git lfs pointers 失败"
+    },
+    "error.GIT-ERR-25": {
+        "other": "获取 git tree 最后一次提交失败"
+    },
+    "error.GIT-ERR-26": {
+        "other": "获取 git blob 信息失败"
+    },
+    "error.GIT-ERR-27": {
+        "other": "获取 git 文件失败"
+    },
+    "error.GIT-ERR-28": {
+        "other": "创建镜像失败"
+    },
+    "error.GIT-ERR-29": {
+        "other": "同步镜像失败"
+    },
+    "error.GIT-ERR-3": {
+        "other": "提交更改失败"
+    },
+    "error.GIT-ERR-30": {
+        "other": "检查仓库是否存在失败"
+    },
+    "error.GIT-ERR-31": {
+        "other": "创建仓库失败"
+    },
+    "error.GIT-ERR-32": {
+        "other": "删除仓库失败"
+    },
+    "error.GIT-ERR-33": {
+        "other": "获取仓库失败"
+    },
+    "error.GIT-ERR-34": {
+        "other": "Git服务不可用"
+    },
+    "error.GIT-ERR-35": {
+        "other": "复制仓库失败"
+    },
+    "error.GIT-ERR-36": {
+        "other": "转移仓库失败"
+    },
+    "error.GIT-ERR-37": {
+        "other": "在 xnet 启用的仓库中使用 git 失败"
+    },
+    "error.GIT-ERR-4": {
+        "other": "查找提交失败"
+    },
+    "error.GIT-ERR-5": {
+        "other": "统计提交数量失败"
+    },
+    "error.GIT-ERR-6": {
+        "other": "未找到该提交"
+    },
+    "error.GIT-ERR-7": {
+        "other": "生成差异对比失败"
+    },
+    "error.GIT-ERR-8": {
+        "other": "Git身份验证失败"
+    },
+    "error.GIT-ERR-9": {
+        "other": "仓库未找到"
+    }
+}

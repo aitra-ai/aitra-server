@@ -1,0 +1,68 @@
+//go:build !ee && !saas
+
+package component
+
+import (
+	"context"
+
+	"opencsg.com/csghub-server/aigateway/types"
+	"opencsg.com/csghub-server/builder/event"
+	"opencsg.com/csghub-server/builder/store/cache"
+	"opencsg.com/csghub-server/builder/store/database"
+	"opencsg.com/csghub-server/common/config"
+	"opencsg.com/csghub-server/common/errorx"
+	common_types "opencsg.com/csghub-server/common/types"
+)
+
+type extendOpenai struct{}
+
+func NewOpenAIComponentFromConfig(config *config.Config) (OpenAIComponent, error) {
+	cacheClient, err := cache.NewCache(context.Background(), cache.RedisConfig{
+		Addr:     config.Redis.Endpoint,
+		Username: config.Redis.User,
+		Password: config.Redis.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &openaiComponentImpl{
+		userStore:      database.NewUserStore(),
+		organStore:     database.NewOrgStore(),
+		deployStore:    database.NewDeployTaskStore(),
+		eventPub:       &event.DefaultEventPublisher,
+		extllmStore:    database.NewLLMConfigStore(config),
+		modelListCache: cacheClient,
+		extendOpenai:   extendOpenai{},
+	}, nil
+}
+
+func (e *openaiComponentImpl) userPreference(ctx context.Context, req *types.UserPreferenceRequest) ([]types.Model, error) {
+	return req.Models, nil
+}
+
+// parseScene parses the scene value from the HTTP header
+// return SceneModelServerless
+func parseScene(sceneValue string) common_types.SceneType {
+	return common_types.SceneModelServerless
+}
+
+func (e *extendOpenai) CheckBalance(ctx context.Context, username string, model *types.Model, sceneValue string) error {
+	// Only check balance for external models (which cost real money)
+	if model.Provider == "" {
+		return nil // Platform models: no credit check
+	}
+	userStore := database.NewUserStore()
+	u, err := userStore.FindByUsername(ctx, username)
+	if err != nil {
+		return nil // Don't block on user lookup failure
+	}
+	creditStore := database.NewUserCreditStore()
+	balance, err := creditStore.Balance(ctx, u.ID)
+	if err != nil {
+		return nil // Don't block on DB error
+	}
+	if balance <= 0 {
+		return errorx.ErrInsufficientBalance
+	}
+	return nil
+}

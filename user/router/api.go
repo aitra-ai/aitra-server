@@ -165,10 +165,74 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error creating llm config handler:%w", err)
 	}
+
+	// Usage & Billing handlers
+	usageHandler, err := handler.NewUsageHandler(config)
+	if err != nil {
+		return nil, fmt.Errorf("error creating usage handler:%w", err)
+	}
+
+	// GPU Deployment handler
+	gpuDeployHandler, err := handler.NewGPUDeploymentHandler(config)
+	if err != nil {
+		return nil, fmt.Errorf("error creating gpu deployment handler:%w", err)
+	}
+
+	// HuggingFace import handler
+	hfImportHandler, err := handler.NewHFImportHandler(config)
+	if err != nil {
+		return nil, fmt.Errorf("error creating hf import handler:%w", err)
+	}
 	{
 		adminGroup := apiV1Group.Group("/admin", mustLogin())
 		adminGroup.GET("/llm_configs", llmConfigHandler.ListExternalLLMConfigs)
+		adminGroup.POST("/llm_configs", llmConfigHandler.CreateExternalLLMConfig)
 		adminGroup.PUT("/llm_configs/:id", llmConfigHandler.UpdateExternalLLMConfig)
+		adminGroup.DELETE("/llm_configs/:id", llmConfigHandler.DeleteExternalLLMConfig)
+
+		// Billing config CRUD (admin only)
+		adminGroup.GET("/billing", usageHandler.ListBilling)
+		adminGroup.POST("/billing", usageHandler.CreateBilling)
+		adminGroup.PUT("/billing/:id", usageHandler.UpdateBilling)
+		adminGroup.DELETE("/billing/:id", usageHandler.DeleteBilling)
+
+		// Audit usage logs (admin only)
+		adminGroup.GET("/audit/usage", usageHandler.GetAuditUsage)
+		adminGroup.GET("/audit/summary", usageHandler.GetAuditSummary)
+
+		// Credit management (admin only)
+		adminGroup.GET("/credits", usageHandler.ListUserBalances)
+		adminGroup.POST("/credits/grant", usageHandler.GrantCredit)
+
+		// GPU SKU management (admin only)
+		adminGroup.GET("/gpu/skus", gpuDeployHandler.AdminListGPUSkus)
+		adminGroup.POST("/gpu/skus", gpuDeployHandler.AdminCreateGPUSku)
+		adminGroup.PUT("/gpu/skus/:id", gpuDeployHandler.AdminUpdateGPUSku)
+		adminGroup.DELETE("/gpu/skus/:id", gpuDeployHandler.AdminDeleteGPUSku)
+		adminGroup.GET("/gpu/deployments", gpuDeployHandler.AdminListDeployments)
+	}
+
+	// User usage routes (require login)
+	{
+		userGroup.GET("/usage", mustLogin(), usageHandler.GetMyUsage)
+		userGroup.GET("/usage/summary", mustLogin(), usageHandler.GetMyUsageSummary)
+		userGroup.GET("/balance", mustLogin(), usageHandler.GetMyBalance)
+
+		// GPU deployment routes (user)
+		userGroup.GET("/gpu/deployments", mustLogin(), gpuDeployHandler.ListMyDeployments)
+		userGroup.POST("/gpu/deployments", mustLogin(), gpuDeployHandler.CreateDeployment)
+		userGroup.PUT("/gpu/deployments/:id/stop", mustLogin(), gpuDeployHandler.StopDeployment)
+		userGroup.DELETE("/gpu/deployments/:id", mustLogin(), gpuDeployHandler.DeleteDeployment)
+
+		// HuggingFace import (user)
+		userGroup.POST("/hf/import", mustLogin(), hfImportHandler.ImportHFModel)
+	}
+
+	// Public routes — no auth required
+	{
+		publicGroup := r.Group("/api/v1/public")
+		publicGroup.GET("/llm_configs", llmConfigHandler.ListPublicLLMConfigs)
+		publicGroup.GET("/gpu/skus", gpuDeployHandler.ListPublicGPUSkus)
 	}
 
 	middlewareCollection := middleware.MiddlewareCollection{}

@@ -1,0 +1,118 @@
+services:
+
+  postgres:
+    image: opencsg-registry.cn-beijing.cr.aliyuncs.com/opencsg_public/csghub/postgres:15.10
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_MULTIPLE_DATABASES: "starhub_server,csghub_casdoor,temporal,temporal_visibility,mirror"
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 5s
+    volumes:
+      - ./data/pgdata:/var/lib/postgresql/data
+    networks:
+      - dev_network
+
+  redis:
+    image: opencsg-registry.cn-beijing.cr.aliyuncs.com/opencsg_public/redis:7.2.5
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - dev_network
+
+  minio:
+    image: opencsg-registry.cn-beijing.cr.aliyuncs.com/opencsg_public/bitnami/minio:2023
+    environment:
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "Password_123"
+      MINIO_SCHEME: "http"
+      MINIO_DEFAULT_BUCKETS: opencsg-server-lfs:public,opencsg-portal-storage:public,loki-data:public
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data/minio_data:/bitnami/minio/data
+    networks:
+      - dev_network
+
+  gitaly:
+    image: opencsg-registry.cn-beijing.cr.aliyuncs.com/opencsg_public/gitaly:v16.4.6
+    command:
+      ["bash", "-c", "mkdir -p /home/git/repositories && rm -rf /srv/gitlab-shell/hooks/* && touch /srv/gitlab-shell/.gitlab_shell_secret && exec /usr/bin/env GITALY_CONFIG_FILE=/home/gitaly.config.toml /scripts/process-wrapper"]
+    user: "root"
+    ports:
+      - "8075:9999"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./data/gitaly.config.toml:/home/gitaly.config.toml
+      - ./data/gitaly/git/repositories:/home/git/repositories
+      - ./data/gitaly/git/hooks:/home/git/hooks
+      - ./data/gitaly/log:/var/log/gitaly
+    networks:
+      - dev_network
+
+  natsmaster:
+    image: opencsg-registry.cn-beijing.cr.aliyuncs.com/opencsg_public/csghub_nats:2.10.16
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+    volumes:
+      - ./data/nats-server.conf:/nats-server.conf
+      - ./data/jetstream:/data/jetstream
+    restart: always
+    networks:
+      - dev_network
+
+  temporal:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PWD=postgres
+      - DEFAULT_NAMESPACE_RETENTION=7d
+      - POSTGRES_SEEDS=postgres
+    image: opencsg-registry.cn-beijing.cr.aliyuncs.com/opencsg_public/temporalio/auto-setup:1.25.1
+    ports:
+      - "7233:7233"
+    networks:
+      - dev_network
+
+  casdoor:
+    image: opencsg-registry.cn-beijing.cr.aliyuncs.com/opencsg_public/casbin/casdoor:v1.733.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+    environment:
+      RUNNING_IN_DOCKER: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/casdoor/conf:/conf
+    restart: always
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8000"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    driver: bridge

@@ -1,0 +1,26 @@
+# Binaries
+bin
+.vscode
+.DS_Store
+.envrc
+.idea/
+
+/gitea
+/pgdata
+minio_data
+local_only
+/jetstream
+.env
+*.sh
+cmd/csghub-server/__debug_*
+
+.data
+*/*/_api_test/
+redis/dump.rdb
+run_server_local.sh
+
+**/loki-data/
+**/tempo-data/
+docs/swagger.json
+docs/swagger.yaml
+docs/docs.go

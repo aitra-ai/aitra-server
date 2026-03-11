@@ -1,0 +1,7 @@
+ARG SPACE_BASE_IMAGE=opencsg-registry.cn-beijing.cr.aliyuncs.com
+ARG NAMESPACE=opencsghq
+FROM ${SPACE_BASE_IMAGE}/${NAMESPACE}/nginx:latest
+WORKDIR /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+
+CMD ["nginx", "-g", "daemon off;"]

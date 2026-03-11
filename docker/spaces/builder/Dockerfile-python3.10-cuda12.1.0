@@ -1,0 +1,51 @@
+ARG SPACE_BASE_IMAGE=opencsg-registry.cn-beijing.cr.aliyuncs.com
+ARG NAMESPACE=opencsghq
+ARG SPACE_BASE_TAG=python3.10-cuda12.1.0
+ARG SPACE_BASE_VERSION=1.0.4
+
+FROM ${SPACE_BASE_IMAGE}/${NAMESPACE}/space-base:${SPACE_BASE_TAG}-${SPACE_BASE_VERSION} AS base
+
+USER user
+WORKDIR /home/user/app
+
+COPY --link --chown=1000 requirements.txt pre-requirements.txt packages.txt ./
+
+USER root
+RUN if [ -s "packages.txt" ]; then \
+        apt-get update && \
+        xargs -r -a packages.txt apt-get install -y && \
+        rm -rf /var/lib/apt/lists/*; \
+    else \
+        echo "packages.txt is empty or not found, skipping system package installation"; \
+    fi
+
+USER user
+ARG PyPI=https://mirrors.aliyun.com/pypi/simple/
+ARG ALLOW_INSECURE_PIP=false
+RUN rm -rf ~/.pip ~/.config/pip && \
+    if [ -n "$PyPI" ]; then \
+        pip config set global.index-url "${PyPI}" && \
+        TRUSTED_HOST=$(echo "${PyPI}" | sed -n 's|https\?://\([^/]*\)/.*|\1|p') && \
+        if [ -n "$TRUSTED_HOST" ]; then \
+            pip config set global.trusted-host "${TRUSTED_HOST}"; \
+        else \
+            echo "Error: Failed to extract trusted host from ${PyPI}" && exit 1; \
+        fi && \
+        if [[ "$PyPI" == http://* ]] || [ "$ALLOW_INSECURE_PIP" = "true" ]; then \
+            pip config set global.verify-ssl false; \
+        fi; \
+    fi
+
+RUN pip install --no-cache-dir --default-timeout=60 -r pre-requirements.txt && \
+    pip install --no-cache-dir --default-timeout=60 -r requirements.txt
+
+COPY --link --chown=1000 ./ ./
+
+ARG HF_ENDPOINT
+ENV PYTHONPATH=$HOME/app \
+    PYTHONUNBUFFERED=1 \
+    GRADIO_ALLOW_FLAGGING=never \
+    GRADIO_SERVER_NAME=0.0.0.0 \
+    HF_ENDPOINT=${HF_ENDPOINT}
+
+ENTRYPOINT ["./start_entrypoint.sh"]
