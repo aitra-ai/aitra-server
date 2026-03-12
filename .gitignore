@@ -24,3 +24,8 @@ run_server_local.sh
 docs/swagger.json
 docs/swagger.yaml
 docs/docs.go
+
+# Local runtime data
+data/pgdata/
+data/gitaly/
+/tmp/
