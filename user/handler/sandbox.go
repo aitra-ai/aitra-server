@@ -19,10 +19,14 @@ type SandboxHandler struct {
 }
 
 func NewSandboxHandler(cfg *config.Config) *SandboxHandler {
+	sandboxHost := "http://localhost"
+	if cfg != nil && cfg.User.SandboxHost != "" {
+		sandboxHost = cfg.User.SandboxHost
+	}
 	return &SandboxHandler{
 		instanceStore: database.NewSandboxInstanceStore(),
 		featuredStore: database.NewFeaturedSpaceStore(),
-		docker:        NewSandboxDockerManager("http://localhost"),
+		docker:        NewSandboxDockerManager(sandboxHost),
 	}
 }
 
