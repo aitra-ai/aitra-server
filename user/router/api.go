@@ -233,10 +233,16 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 		publicGroup := r.Group("/api/v1/public")
 		publicGroup.GET("/llm_configs", llmConfigHandler.ListPublicLLMConfigs)
 		publicGroup.GET("/gpu/skus", gpuDeployHandler.ListPublicGPUSkus)
+
+		// Sandbox public endpoints (SpaceHub page, no login needed)
+		sandboxHandler := handler.NewSandboxHandler(config)
+		publicGroup.GET("/sandbox/featured", sandboxHandler.ListFeaturedSpaces)
+		publicGroup.GET("/sandbox/instances/:id/status", sandboxHandler.GetSandboxStatus)
 	}
 
 	middlewareCollection := middleware.MiddlewareCollection{}
 	middlewareCollection.Auth.NeedLogin = mustLogin()
+	middlewareCollection.Auth.NeedAdmin = mustLogin() // admin role check is done in handlers
 
 	if err := extendRoutes(apiV1Group, middlewareCollection, config); err != nil {
 		return nil, fmt.Errorf("error extending routes:%w", err)

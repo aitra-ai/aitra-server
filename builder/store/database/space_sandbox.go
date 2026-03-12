@@ -156,7 +156,7 @@ func NewFeaturedSpaceStore() FeaturedSpaceStore {
 func (s *featuredSpaceStore) List(ctx context.Context) ([]FeaturedSpace, error) {
 	var result []FeaturedSpace
 	err := s.db.Operator.Core.NewSelect().Model(&result).
-		Where("enabled = true").Order("sort_order ASC, id ASC").Scan(ctx)
+		Where("enabled = true").OrderExpr("sort_order ASC, id ASC").Scan(ctx)
 	return result, err
 }
 
