@@ -226,6 +226,7 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 
 		// HuggingFace import (user)
 		userGroup.POST("/hf/import", mustLogin(), hfImportHandler.ImportHFModel)
+		userGroup.GET("/hf/model-info", hfImportHandler.GetHFModelInfo) // public: no auth needed
 	}
 
 	// Public routes — no auth required
