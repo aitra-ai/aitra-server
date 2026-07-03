@@ -2,7 +2,7 @@ package component
 
 import (
 	"context"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 	"sync"
 	"testing"
 	"time"
@@ -15,9 +15,9 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 	testcore "k8s.io/client-go/testing"
 
-	"opencsg.com/csghub-server/common/types"
-	ltypes "opencsg.com/csghub-server/logcollector/types"
-	rtypes "opencsg.com/csghub-server/runner/types"
+	"github.com/aitra-ai/aitra-server/common/types"
+	ltypes "github.com/aitra-ai/aitra-server/logcollector/types"
+	rtypes "github.com/aitra-ai/aitra-server/runner/types"
 )
 
 func TestNewPodMonitor(t *testing.T) {

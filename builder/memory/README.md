@@ -77,7 +77,7 @@ func init() {
 4) Add a blank import in `component/memory.go` so the registration runs:
 
 ```go
-import _ "opencsg.com/csghub-server/builder/memory/your_backend"
+import _ "github.com/aitra-ai/aitra-server/builder/memory/your_backend"
 ```
 
 ## Recommended File Layout

@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"opencsg.com/csghub-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/errorx"
 )
 
 func JsonStrToMap(jsonStr string) (map[string]string, error) {

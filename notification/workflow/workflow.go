@@ -6,8 +6,8 @@ import (
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/log"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 var (

@@ -5,8 +5,8 @@ import (
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/user/workflow/activity"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/user/workflow/activity"
 )
 
 const WorkflowUserDeletionQueueName = "workflow_user_deletion_queue"

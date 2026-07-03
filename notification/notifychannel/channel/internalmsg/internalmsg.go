@@ -9,13 +9,13 @@ import (
 
 	"github.com/google/uuid"
 	"go.temporal.io/sdk/client"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	notifychannel "opencsg.com/csghub-server/notification/notifychannel"
-	internalmsgworkflow "opencsg.com/csghub-server/notification/notifychannel/channel/internalmsg/workflow"
-	"opencsg.com/csghub-server/notification/utils"
-	"opencsg.com/csghub-server/notification/workflow"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	notifychannel "github.com/aitra-ai/aitra-server/notification/notifychannel"
+	internalmsgworkflow "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/internalmsg/workflow"
+	"github.com/aitra-ai/aitra-server/notification/utils"
+	"github.com/aitra-ai/aitra-server/notification/workflow"
 )
 
 type InternalMessageChannel struct {

@@ -9,8 +9,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	database "opencsg.com/csghub-server/builder/store/database"
-	types "opencsg.com/csghub-server/common/types"
+	database "github.com/aitra-ai/aitra-server/builder/store/database"
+	types "github.com/aitra-ai/aitra-server/common/types"
 )
 
 // MockClusterInfoStore is a mock of ClusterInfoStore interface.

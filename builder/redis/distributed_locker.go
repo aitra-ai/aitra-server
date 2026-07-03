@@ -10,7 +10,7 @@ import (
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v9"
 	goredislib "github.com/redis/go-redis/v9"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 var ErrLockAcquire = errors.New("distributed lock acquire fail")

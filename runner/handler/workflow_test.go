@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mockcom "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/runner/component"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/builder/testutil"
-	"opencsg.com/csghub-server/common/types"
+	mockcom "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/runner/component"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/testutil"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type WorkFlowTester struct {

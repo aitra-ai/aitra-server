@@ -4,8 +4,8 @@ package cluster
 
 import (
 	v1 "k8s.io/api/core/v1"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func collectNodeVXPU(node v1.Node, config *config.Config) []types.VXPU {

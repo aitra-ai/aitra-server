@@ -5,8 +5,8 @@ import (
 	"log/slog"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/builder/proxy"
-	"opencsg.com/csghub-server/common/utils/trace"
+	"github.com/aitra-ai/aitra-server/builder/proxy"
+	"github.com/aitra-ai/aitra-server/common/utils/trace"
 )
 
 type InternalServiceProxyHandler struct {

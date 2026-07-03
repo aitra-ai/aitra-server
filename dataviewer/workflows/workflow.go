@@ -8,9 +8,9 @@ import (
 	sdktemporal "go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/worker"
 	"go.temporal.io/sdk/workflow"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	dvCom "opencsg.com/csghub-server/dataviewer/common"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	dvCom "github.com/aitra-ai/aitra-server/dataviewer/common"
 )
 
 func BuildDataViewerRunWorker(tc temporal.Client, cfg *config.Config, act DataViewerActivity) error {

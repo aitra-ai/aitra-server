@@ -16,12 +16,12 @@ import (
 	"github.com/cespare/xxhash/v2"
 	"github.com/redis/go-redis/v9"
 	"github.com/uptrace/bun"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/types/enum"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types/enum"
 )
 
 const HashedRepoPathPrefix = "@hashed_repos"

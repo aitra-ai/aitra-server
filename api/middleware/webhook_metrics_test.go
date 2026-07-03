@@ -10,7 +10,7 @@ import (
 	dto "github.com/prometheus/client_model/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	bldprometheus "opencsg.com/csghub-server/builder/prometheus"
+	bldprometheus "github.com/aitra-ai/aitra-server/builder/prometheus"
 )
 
 func TestWebhookMetrics(t *testing.T) {

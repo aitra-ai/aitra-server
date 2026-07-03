@@ -9,15 +9,15 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/builder/deploy"
-	"opencsg.com/csghub-server/builder/loki"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy"
+	"github.com/aitra-ai/aitra-server/builder/loki"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 
-	mockdeploy "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/deploy"
-	mockdb "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/database"
-	mockComps "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
+	mockdeploy "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/deploy"
+	mockdb "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/database"
+	mockComps "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
 )
 
 func NewTestFinetuneComponent(config *config.Config,

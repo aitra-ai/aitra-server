@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"opencsg.com/csghub-server/component/reporter"
+	"github.com/aitra-ai/aitra-server/component/reporter"
 
 	"github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
 	versioned "github.com/argoproj/argo-workflows/v3/pkg/client/clientset/versioned"
@@ -23,14 +23,14 @@ import (
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/utils/ptr"
-	"opencsg.com/csghub-server/builder/deploy/cluster"
-	"opencsg.com/csghub-server/builder/event"
-	"opencsg.com/csghub-server/builder/redis"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/runner/common"
-	sched "opencsg.com/csghub-server/runner/component/kube_scheduler"
+	"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
+	"github.com/aitra-ai/aitra-server/builder/event"
+	"github.com/aitra-ai/aitra-server/builder/redis"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/runner/common"
+	sched "github.com/aitra-ai/aitra-server/runner/component/kube_scheduler"
 )
 
 type workFlowComponentImpl struct {

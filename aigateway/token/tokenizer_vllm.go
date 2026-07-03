@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"log/slog"
 
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/llm"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/llm"
 )
 
 type vllmTokenizerImpl struct {

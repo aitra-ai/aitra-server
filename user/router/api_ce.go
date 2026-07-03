@@ -4,9 +4,9 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/middleware"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/user/handler"
+	"github.com/aitra-ai/aitra-server/api/middleware"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/user/handler"
 )
 
 func extendRoutes(rg *gin.RouterGroup, mc middleware.MiddlewareCollection, cfg *config.Config) error {

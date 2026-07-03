@@ -3,13 +3,13 @@ package workflow
 import (
 	"log/slog"
 
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/notification/notifychannel/worker"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/notification/notifychannel/worker"
 
 	// blank import to register workers via their init() function.
-	_ "opencsg.com/csghub-server/notification/notifychannel/channel/email/workflow"
-	_ "opencsg.com/csghub-server/notification/notifychannel/channel/internalmsg/workflow"
+	_ "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/email/workflow"
+	_ "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/internalmsg/workflow"
 )
 
 func createWorker(cfg *config.Config, workflowClient temporal.Client) {

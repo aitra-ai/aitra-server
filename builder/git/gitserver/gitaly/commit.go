@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"gitlab.com/gitlab-org/gitaly/v16/proto/go/gitalypb"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 const SHA1EmptyTreeID = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"

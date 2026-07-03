@@ -4,7 +4,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/runner/handler"
+	"github.com/aitra-ai/aitra-server/runner/handler"
 )
 
 func addClusterNodeRoutes(clusterGroup *gin.RouterGroup, clusterHandler *handler.ClusterHandler) {

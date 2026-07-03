@@ -6,8 +6,8 @@ import (
 
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/notification/notifychannel/channel/email/workflow/activity"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/notification/notifychannel/channel/email/workflow/activity"
 )
 
 const WorkflowBroadcastEmailQueueName = "workflow_broadcast_email_queue"

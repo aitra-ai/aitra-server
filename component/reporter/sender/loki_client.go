@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 
-	"opencsg.com/csghub-server/builder/loki"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/loki"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 // lokiClient implements the LogSender interface

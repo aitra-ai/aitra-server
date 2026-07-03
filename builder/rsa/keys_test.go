@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	mockrsa "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/rsa"
-	"opencsg.com/csghub-server/common/types"
+	mockrsa "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/rsa"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 var (

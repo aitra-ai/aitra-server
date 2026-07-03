@@ -8,12 +8,12 @@ import (
 	"log/slog"
 	"strings"
 
-	"opencsg.com/csghub-server/builder/deploy"
-	"opencsg.com/csghub-server/builder/git"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy"
+	"github.com/aitra-ai/aitra-server/builder/git"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type UserComponent interface {

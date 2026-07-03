@@ -12,13 +12,13 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/mod/semver"
-	"opencsg.com/csghub-server/builder/deploy"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/git/membership"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/git/membership"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestSpaceComponent_GetSupportedCUDAVersions(t *testing.T) {

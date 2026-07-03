@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"opencsg.com/csghub-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
 )
 
 type MirrorSvcClient interface {

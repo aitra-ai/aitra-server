@@ -9,8 +9,8 @@ import (
 
 	"github.com/XSAM/otelsql"
 	_ "github.com/marcboeker/go-duckdb"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type Reader interface {

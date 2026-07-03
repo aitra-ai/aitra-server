@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"opencsg.com/csghub-server/builder/llm"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/llm"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type MCPScannerPlugin interface {

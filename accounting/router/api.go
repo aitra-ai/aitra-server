@@ -3,17 +3,17 @@ package router
 import (
 	"fmt"
 
-	"opencsg.com/csghub-server/builder/instrumentation"
+	"github.com/aitra-ai/aitra-server/builder/instrumentation"
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"opencsg.com/csghub-server/accounting/handler"
-	"opencsg.com/csghub-server/api/middleware"
-	bldmq "opencsg.com/csghub-server/builder/mq"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/mq"
+	"github.com/aitra-ai/aitra-server/accounting/handler"
+	"github.com/aitra-ai/aitra-server/api/middleware"
+	bldmq "github.com/aitra-ai/aitra-server/builder/mq"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/mq"
 )
 
 func NewAccountRouter(config *config.Config, mqHandler mq.MessageQueue, mqFactory bldmq.MessageQueueFactory) (*gin.Engine, error) {

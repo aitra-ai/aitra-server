@@ -8,7 +8,7 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 var _ MessageQueue = (*Nats)(nil)

@@ -9,11 +9,11 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/mock"
-	mockio "opencsg.com/csghub-server/_mocks/io"
-	mocksens "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	mockio "github.com/aitra-ai/aitra-server/_mocks/io"
+	mocksens "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestTextFileChecker_Run(t *testing.T) {

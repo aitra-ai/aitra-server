@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"time"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 // StartGPUBillingJob runs a background goroutine that bills running deployments every 5 minutes.

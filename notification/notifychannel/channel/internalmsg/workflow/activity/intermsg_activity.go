@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"go.temporal.io/sdk/activity"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 )
 
 type BatchInsertUserMessage struct {

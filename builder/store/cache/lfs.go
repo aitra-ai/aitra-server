@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 type LfsCacheImpl struct {

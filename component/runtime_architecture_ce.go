@@ -5,7 +5,7 @@ package component
 import (
 	"strings"
 
-	"opencsg.com/csghub-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 )
 
 func checkTagName(rf *database.RuntimeFramework, tag string) bool {

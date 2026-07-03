@@ -9,10 +9,10 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mockrpc "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
+	mockrpc "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
 )
 
 func TestUserPhoneComponent_CanChangePhone_SSOUserPhoneNotExist(t *testing.T) {

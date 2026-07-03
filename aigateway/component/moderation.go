@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/openai/openai-go/v3"
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/common/config"
-	commontypes "opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/common/config"
+	commontypes "github.com/aitra-ai/aitra-server/common/types"
 )
 
 const (

@@ -5,9 +5,9 @@ import (
 	"log/slog"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/component"
 )
 
 type EventHandler struct {

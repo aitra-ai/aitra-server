@@ -3,7 +3,7 @@ package utils_test
 import (
 	"testing"
 
-	"opencsg.com/csghub-server/notification/utils"
+	"github.com/aitra-ai/aitra-server/notification/utils"
 )
 
 // TestIsStringInArray tests the IsStringInArray function

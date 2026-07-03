@@ -9,11 +9,11 @@ import (
 	"strconv"
 	"strings"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/types/enum"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types/enum"
 )
 
 const (

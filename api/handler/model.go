@@ -10,10 +10,10 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
 )
 
 // GetVisiableModels godoc

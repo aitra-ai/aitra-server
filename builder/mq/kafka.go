@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )

@@ -20,9 +20,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
 )
 
 const timeoutTime = 10 * time.Second

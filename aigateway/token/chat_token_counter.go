@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/openai/openai-go/v3"
-	"opencsg.com/csghub-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
 )
 
 var _ Counter = (*chatTokenCounterImpl)(nil)

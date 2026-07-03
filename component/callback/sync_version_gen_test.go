@@ -7,11 +7,11 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	filterMock "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/common/filter"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/filter"
-	"opencsg.com/csghub-server/common/tests"
-	"opencsg.com/csghub-server/common/types"
+	filterMock "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/common/filter"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/filter"
+	"github.com/aitra-ai/aitra-server/common/tests"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestSyncVersionGenerator_Gen(t *testing.T) {

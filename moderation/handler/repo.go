@@ -7,12 +7,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.temporal.io/sdk/client"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/moderation/component"
-	"opencsg.com/csghub-server/moderation/workflow"
-	"opencsg.com/csghub-server/moderation/workflow/common"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/moderation/component"
+	"github.com/aitra-ai/aitra-server/moderation/workflow"
+	"github.com/aitra-ai/aitra-server/moderation/workflow/common"
 )
 
 type RepoHandler struct {

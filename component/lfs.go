@@ -3,7 +3,7 @@ package component
 import (
 	"context"
 
-	"opencsg.com/csghub-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 )
 
 type LfsComponent interface {

@@ -5,9 +5,9 @@ import (
 	"log/slog"
 	"strings"
 
-	"opencsg.com/csghub-server/builder/sensitive/internal"
-	"opencsg.com/csghub-server/builder/sensitive/internal/ahocorasick"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/sensitive/internal"
+	"github.com/aitra-ai/aitra-server/builder/sensitive/internal/ahocorasick"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 // TextModerationResponseData refer to aliyun green text moderation response item

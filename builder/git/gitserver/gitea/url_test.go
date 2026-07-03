@@ -3,7 +3,7 @@ package gitea
 import (
 	"testing"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func Test_repoPrefixByType(t *testing.T) {

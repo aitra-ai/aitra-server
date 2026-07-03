@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 var (

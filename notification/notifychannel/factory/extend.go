@@ -3,7 +3,7 @@
 package factory
 
 import (
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func extendChannels(_ *config.Config, _ Factory) {

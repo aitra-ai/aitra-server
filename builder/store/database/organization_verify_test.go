@@ -2,12 +2,12 @@ package database_test
 
 import (
 	"context"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/tests"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/tests"
 )
 
 func TestOrganizationVerifyStore(t *testing.T) {

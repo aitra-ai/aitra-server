@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"

@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"strings"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func readPrivateKey(reader KeysReader, fileName string) (*rsa.PrivateKey, error) {

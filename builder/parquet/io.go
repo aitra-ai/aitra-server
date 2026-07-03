@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/minio/minio-go/v7"
-	"opencsg.com/csghub-server/builder/store/s3"
+	"github.com/aitra-ai/aitra-server/builder/store/s3"
 )
 
 type ReaderAtCloser interface {

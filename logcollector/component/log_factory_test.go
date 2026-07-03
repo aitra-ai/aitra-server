@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mockcomponent "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/logcollector/component"
-	ltypes "opencsg.com/csghub-server/logcollector/types"
+	mockcomponent "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/logcollector/component"
+	ltypes "github.com/aitra-ai/aitra-server/logcollector/types"
 )
 
 func Test_logFactory_Start(t *testing.T) {

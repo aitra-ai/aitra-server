@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type argoWorkFlowStoreImpl struct {

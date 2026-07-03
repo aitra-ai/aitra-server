@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 // SensitiveWordData represents the sensitive word data

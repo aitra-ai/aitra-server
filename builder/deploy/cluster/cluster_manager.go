@@ -23,10 +23,10 @@ import (
 	"k8s.io/client-go/util/homedir"
 
 	knative "knative.dev/serving/pkg/client/clientset/versioned"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	rtypes "opencsg.com/csghub-server/runner/types"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	rtypes "github.com/aitra-ai/aitra-server/runner/types"
 	lwscli "sigs.k8s.io/lws/client-go/clientset/versioned"
 )
 

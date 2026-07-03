@@ -6,12 +6,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.temporal.io/sdk/client"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/api/workflow"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	component "opencsg.com/csghub-server/component/callback"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/api/workflow"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	component "github.com/aitra-ai/aitra-server/component/callback"
 )
 
 type GitCallbackHandler struct {

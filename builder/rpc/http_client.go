@@ -13,13 +13,13 @@ import (
 	"strings"
 	"time"
 
-	"opencsg.com/csghub-server/common/utils/trace"
+	"github.com/aitra-ai/aitra-server/common/utils/trace"
 
 	"github.com/avast/retry-go/v4"
 	slogmulti "github.com/samber/slog-multi"
 	"go.opentelemetry.io/contrib/bridges/otelslog"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 type HttpDoer interface {
@@ -66,7 +66,7 @@ func NewHttpClient(endpoint string, opts ...RequestOption) *HttpClient {
 		}),
 	}
 	if cfg.Instrumentation.OTLPEndpoint != "" && cfg.Instrumentation.OTLPLogging {
-		handlers = append(handlers, otelslog.NewHandler("csghub-server"))
+		handlers = append(handlers, otelslog.NewHandler("aitra-server"))
 	}
 	defaultClient.logger = slog.New(slogmulti.Fanout(handlers...))
 

@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 const (

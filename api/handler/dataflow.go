@@ -6,12 +6,12 @@ import (
 	"log/slog"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/builder/proxy"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/builder/proxy"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/component"
 )
 
 type DataflowProxyHandler struct {

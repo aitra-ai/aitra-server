@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/git/gitserver/gitaly"
-	"opencsg.com/csghub-server/builder/git/gitserver/gitea"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver/gitaly"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver/gitea"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 // This benchmark evaluates the performance of the new `tree` and `logs_tree` APIs compared to

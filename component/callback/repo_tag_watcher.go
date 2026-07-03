@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type repoTagWatcher struct {

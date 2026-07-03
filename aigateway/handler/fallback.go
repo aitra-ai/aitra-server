@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/proxy"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/proxy"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 // fallbackProbeWriter is a response writer that captures the first response to check for errors.

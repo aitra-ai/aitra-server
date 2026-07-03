@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/types/telemetry"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types/telemetry"
 )
 
 func TestTelemetryComponent_SaveUsageData(t *testing.T) {

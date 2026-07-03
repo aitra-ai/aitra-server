@@ -9,13 +9,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mockNats "opencsg.com/csghub-server/_mocks/github.com/nats-io/nats.go/jetstream"
-	mockacct "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/accounting/component"
-	mockmq "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/mq"
-	"opencsg.com/csghub-server/accounting/component"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/mq"
+	mockNats "github.com/aitra-ai/aitra-server/_mocks/github.com/nats-io/nats.go/jetstream"
+	mockacct "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/accounting/component"
+	mockmq "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/mq"
+	"github.com/aitra-ai/aitra-server/accounting/component"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/mq"
 )
 
 func NewTestConsumerMetering(

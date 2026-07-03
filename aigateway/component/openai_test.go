@@ -9,20 +9,20 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mockbldmq "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/mq"
-	mockdb "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/database"
-	mockmq "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/mq"
-	"opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/types"
+	mockbldmq "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/mq"
+	mockdb "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/database"
+	mockmq "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/mq"
+	"github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
 
 	"github.com/openai/openai-go/v3"
-	mocktoken "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/builder/event"
-	"opencsg.com/csghub-server/builder/store/database"
+	mocktoken "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/builder/event"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 
-	bldmq "opencsg.com/csghub-server/builder/mq"
-	"opencsg.com/csghub-server/common/config"
-	commontypes "opencsg.com/csghub-server/common/types"
+	bldmq "github.com/aitra-ai/aitra-server/builder/mq"
+	"github.com/aitra-ai/aitra-server/common/config"
+	commontypes "github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestGetSceneFromSvcType(t *testing.T) {

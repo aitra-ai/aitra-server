@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/avast/retry-go/v4"
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type TextFileChecker struct {

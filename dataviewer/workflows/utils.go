@@ -15,8 +15,8 @@ import (
 
 	"github.com/bmatcuk/doublestar/v4"
 	"go.temporal.io/sdk/activity"
-	"opencsg.com/csghub-server/common/types"
-	dvCom "opencsg.com/csghub-server/dataviewer/common"
+	"github.com/aitra-ai/aitra-server/common/types"
+	dvCom "github.com/aitra-ai/aitra-server/dataviewer/common"
 )
 
 func TransferFileObject(file *dvCom.RepoFile, subsetName, splitName string) dvCom.FileObject {

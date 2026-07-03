@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 )
 
 type fakeReader struct {

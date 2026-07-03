@@ -4,7 +4,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func NeedPhoneVerified(config *config.Config) gin.HandlerFunc {

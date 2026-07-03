@@ -6,20 +6,20 @@ import (
 	"testing"
 	"time"
 
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	mockbuilder "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/deploy/imagebuilder"
-	mockrunner "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/deploy/imagerunner"
-	mock_git "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/git/gitserver"
-	mockdb "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/database"
-	mockReporter "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component/reporter"
+	mockbuilder "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/deploy/imagebuilder"
+	mockrunner "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/deploy/imagerunner"
+	mock_git "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	mockdb "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/database"
+	mockReporter "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component/reporter"
 )
 
 type testEnv struct {

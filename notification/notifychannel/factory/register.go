@@ -3,11 +3,11 @@ package factory
 import (
 	"log/slog"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	email "opencsg.com/csghub-server/notification/notifychannel/channel/email"
-	emailclient "opencsg.com/csghub-server/notification/notifychannel/channel/email/client"
-	internalmsg "opencsg.com/csghub-server/notification/notifychannel/channel/internalmsg"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	email "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/email"
+	emailclient "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/email/client"
+	internalmsg "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/internalmsg"
 )
 
 const (

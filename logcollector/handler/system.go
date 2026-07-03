@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/logcollector/component"
+	"github.com/aitra-ai/aitra-server/logcollector/component"
 )
 
 type LogCollectorHandler struct {

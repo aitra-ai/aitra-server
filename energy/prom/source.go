@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"opencsg.com/csghub-server/energy/aggregator"
+	"github.com/aitra-ai/aitra-server/energy/aggregator"
 )
 
 // Source implements aggregator.EnergySource by querying Prometheus for

@@ -2,11 +2,11 @@ package common
 
 import (
 	"log/slog"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 	"time"
 
-	"opencsg.com/csghub-server/builder/redis"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/redis"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 type DeployConfig struct {

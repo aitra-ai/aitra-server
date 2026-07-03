@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/i18n"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/i18n"
 )
 
 // OK responds the client with standard JSON.

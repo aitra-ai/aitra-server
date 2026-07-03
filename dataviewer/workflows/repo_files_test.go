@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/common/types"
-	dvCom "opencsg.com/csghub-server/dataviewer/common"
+	"github.com/aitra-ai/aitra-server/common/types"
+	dvCom "github.com/aitra-ai/aitra-server/dataviewer/common"
 )
 
 func TestRepoFiles_appendFile(t *testing.T) {

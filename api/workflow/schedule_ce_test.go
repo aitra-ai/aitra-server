@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/builder/multisync"
-	"opencsg.com/csghub-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/multisync"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 )
 
 func TestSchedule_CalcRecomScoreWorkflow(t *testing.T) {

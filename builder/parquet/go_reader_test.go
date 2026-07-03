@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
-	"opencsg.com/csghub-server/builder/parquet"
+	"github.com/aitra-ai/aitra-server/builder/parquet"
 )
 
 func initReader() *parquet.ParquetGoReader {

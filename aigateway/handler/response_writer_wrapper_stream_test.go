@@ -11,10 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/component"
-	mocktoken "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/component"
+	mocktoken "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
 )
 
 func TestResponseWriterWrapper_NewResponseWriterWrapper(t *testing.T) {

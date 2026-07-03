@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"opencsg.com/csghub-server/component/reporter"
+	"github.com/aitra-ai/aitra-server/component/reporter"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -28,16 +28,16 @@ import (
 	v1 "knative.dev/serving/pkg/apis/serving/v1"
 	"knative.dev/serving/pkg/client/informers/externalversions"
 	listerv1 "knative.dev/serving/pkg/client/listers/serving/v1"
-	"opencsg.com/csghub-server/builder/deploy/cluster"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	utils "opencsg.com/csghub-server/common/utils/common"
-	rcommon "opencsg.com/csghub-server/runner/common"
-	sched "opencsg.com/csghub-server/runner/component/kube_scheduler"
-	rtypes "opencsg.com/csghub-server/runner/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	utils "github.com/aitra-ai/aitra-server/common/utils/common"
+	rcommon "github.com/aitra-ai/aitra-server/runner/common"
+	sched "github.com/aitra-ai/aitra-server/runner/component/kube_scheduler"
+	rtypes "github.com/aitra-ai/aitra-server/runner/types"
 )
 
 const (

@@ -8,9 +8,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/tests"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/tests"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestCheckResource(t *testing.T) {

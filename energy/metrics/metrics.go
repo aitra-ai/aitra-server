@@ -9,8 +9,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
-	"opencsg.com/csghub-server/energy"
-	"opencsg.com/csghub-server/energy/aggregator"
+	"github.com/aitra-ai/aitra-server/energy"
+	"github.com/aitra-ai/aitra-server/energy/aggregator"
 )
 
 // PrometheusSink satisfies aggregator.MetricsSink.

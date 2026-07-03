@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	mock_token "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/types"
+	mock_token "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
 )
 
 func TestTokenizer_EmbeddingEncode(t *testing.T) {

@@ -3,7 +3,7 @@
 package callback
 
 import (
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func (g *syncVersionGeneratorImpl) GenSyncVersion(req *types.GiteaCallbackPushReq) error {

@@ -13,17 +13,17 @@ import (
 	"strings"
 	"time"
 
-	sched "opencsg.com/csghub-server/runner/component/kube_scheduler"
+	sched "github.com/aitra-ai/aitra-server/runner/component/kube_scheduler"
 
-	"opencsg.com/csghub-server/component/reporter"
+	"github.com/aitra-ai/aitra-server/component/reporter"
 
 	v1alpha1 "github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
-	"opencsg.com/csghub-server/builder/deploy/cluster"
-	"opencsg.com/csghub-server/common/config"
-	ctypes "opencsg.com/csghub-server/common/types"
-	embed "opencsg.com/csghub-server/docker/spaces/builder"
-	rcommon "opencsg.com/csghub-server/runner/common"
-	"opencsg.com/csghub-server/runner/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
+	"github.com/aitra-ai/aitra-server/common/config"
+	ctypes "github.com/aitra-ai/aitra-server/common/types"
+	embed "github.com/aitra-ai/aitra-server/docker/spaces/builder"
+	rcommon "github.com/aitra-ai/aitra-server/runner/common"
+	"github.com/aitra-ai/aitra-server/runner/types"
 
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"

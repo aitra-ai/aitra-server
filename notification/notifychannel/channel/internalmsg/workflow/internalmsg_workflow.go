@@ -6,7 +6,7 @@ import (
 
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
-	activity "opencsg.com/csghub-server/notification/notifychannel/channel/internalmsg/workflow/activity"
+	activity "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/internalmsg/workflow/activity"
 )
 
 func BroadcastInternalMessageWorkflow(ctx workflow.Context, messageId string, userPageSize int) error {

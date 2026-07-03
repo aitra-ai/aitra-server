@@ -3,7 +3,7 @@
 package scenarioregister
 
 import (
-	"opencsg.com/csghub-server/notification/scenariomgr"
+	"github.com/aitra-ai/aitra-server/notification/scenariomgr"
 )
 
 func extend(_ *scenariomgr.DataProvider) {

@@ -6,12 +6,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
-	mockcomponent "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/builder/testutil"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
+	mockcomponent "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/testutil"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type DatasetTester struct {

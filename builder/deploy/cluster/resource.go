@@ -5,8 +5,8 @@ import (
 	"log/slog"
 
 	k8s_errors "k8s.io/apimachinery/pkg/api/errors"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func (cluster *Cluster) GetResourceAvailability(config *config.Config) (types.ResourceStatus, map[string]types.NodeResourceInfo, error) {

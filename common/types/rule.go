@@ -3,7 +3,7 @@ package types
 import (
 	"time"
 
-	"opencsg.com/csghub-server/common/types/enum"
+	"github.com/aitra-ai/aitra-server/common/types/enum"
 )
 
 type Rule struct {

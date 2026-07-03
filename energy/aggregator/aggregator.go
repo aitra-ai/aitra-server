@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"opencsg.com/csghub-server/energy"
+	"github.com/aitra-ai/aitra-server/energy"
 )
 
 // Scope identifies which accelerators a deployment's energy reading covers. For

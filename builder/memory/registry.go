@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"opencsg.com/csghub-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
 )
 
 type AdapterFactory func(endpoint, basePath string, opts ...rpc.RequestOption) Adapter

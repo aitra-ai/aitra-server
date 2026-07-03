@@ -9,9 +9,9 @@ import (
 	"github.com/openai/openai-go/v3/shared/constant"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mocktoken "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/types"
+	mocktoken "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
 )
 
 func TestChatTokenCounter_Usage_WithCompletion(t *testing.T) {

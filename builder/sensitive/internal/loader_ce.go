@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"time"
 
-	"opencsg.com/csghub-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 )
 
 // Database loads sensitive words from database

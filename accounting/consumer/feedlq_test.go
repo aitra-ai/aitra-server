@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	mockmq "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/mq"
-	"opencsg.com/csghub-server/mq"
+	mockmq "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/mq"
+	"github.com/aitra-ai/aitra-server/mq"
 )
 
 func NewTestFeeDlq(mqh mq.MessageQueue) *FeeDlq {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mockio "opencsg.com/csghub-server/_mocks/io"
-	"opencsg.com/csghub-server/common/types"
+	mockio "github.com/aitra-ai/aitra-server/_mocks/io"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestUnkownFileChecker_Run(t *testing.T) {

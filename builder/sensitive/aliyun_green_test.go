@@ -15,9 +15,9 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/green"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mockgreen "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/common/types"
+	mockgreen "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestSensitiveChecker_SplitTasks(t *testing.T) {

@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"net/url"
 
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/builder/git/membership"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/builder/git/membership"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type UserSvcClient interface {

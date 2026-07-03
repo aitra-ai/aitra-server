@@ -7,11 +7,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"go.temporal.io/sdk/worker"
-	mock_temporal "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/temporal"
-	mock_activity "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/dataviewer/workflows"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	dvCom "opencsg.com/csghub-server/dataviewer/common"
+	mock_temporal "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/temporal"
+	mock_activity "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/dataviewer/workflows"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	dvCom "github.com/aitra-ai/aitra-server/dataviewer/common"
 )
 
 type workflowTester struct {

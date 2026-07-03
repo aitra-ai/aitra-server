@@ -8,32 +8,32 @@ packages:
     config:
     interfaces:
       Reader:
-  opencsg.com/csghub-server/component:
+  github.com/aitra-ai/aitra-server/component:
     config:
       all: true
     interfaces:
       RepoComponent:
         config:
           mock-build-tags: "!saas && !ee"
-  opencsg.com/csghub-server/component/reporter:
+  github.com/aitra-ai/aitra-server/component/reporter:
     config:
     interfaces:
       LogCollector:
-  opencsg.com/csghub-server/component/reporter/sender:
+  github.com/aitra-ai/aitra-server/component/reporter/sender:
     config:
     interfaces:
       LogSender:
 
-  opencsg.com/csghub-server/component/checker:
+  github.com/aitra-ai/aitra-server/component/checker:
     config:
     interfaces:
       GitCallbackChecker:
-  opencsg.com/csghub-server/component/callback:
+  github.com/aitra-ai/aitra-server/component/callback:
     config:
     interfaces:
       SyncVersionGenerator:
       GitCallbackComponent:
-  opencsg.com/csghub-server/user/component:
+  github.com/aitra-ai/aitra-server/user/component:
     config:
     interfaces:
       MemberComponent:
@@ -43,27 +43,27 @@ packages:
       AccessTokenComponent:
       InvitationComponent:
       UserPhoneComponent:
-  opencsg.com/csghub-server/payment/component:
+  github.com/aitra-ai/aitra-server/payment/component:
     config:
     interfaces:
       PaymentComponent:
       StripeComponent:
-  opencsg.com/csghub-server/moderation/component:
+  github.com/aitra-ai/aitra-server/moderation/component:
     interfaces:
       RepoComponent:
       SensitiveComponent:
       SensitiveWordSetComponent:
-  opencsg.com/csghub-server/builder/geo:
+  github.com/aitra-ai/aitra-server/builder/geo:
     config:
       all: True
-  opencsg.com/csghub-server/builder/store/database:
+  github.com/aitra-ai/aitra-server/builder/store/database:
     config:
       all: True
-  opencsg.com/csghub-server/builder/store/database/ee:
+  github.com/aitra-ai/aitra-server/builder/store/database/ee:
     config:
       all: True
       mock-build-tags: "saas || ee"
-  opencsg.com/csghub-server/builder/rpc:
+  github.com/aitra-ai/aitra-server/builder/rpc:
     config:
     interfaces:
       UserSvcClient:
@@ -74,91 +74,91 @@ packages:
       AgentHubSvcClient:
       XnetSvcClient:
       CsgbotSvcClient:
-  opencsg.com/csghub-server/builder/llm:
+  github.com/aitra-ai/aitra-server/builder/llm:
     config:
     interfaces:
       LLMSvcClient:
-  opencsg.com/csghub-server/builder/sensitive:
+  github.com/aitra-ai/aitra-server/builder/sensitive:
     config:
     interfaces:
       GreenClient:
       Green2022Client:
       SensitiveChecker:
-  opencsg.com/csghub-server/builder/proxy:
+  github.com/aitra-ai/aitra-server/builder/proxy:
     config:
     interfaces:
       ReverseProxy:
-  opencsg.com/csghub-server/builder/git/gitserver:
+  github.com/aitra-ai/aitra-server/builder/git/gitserver:
     config:
     interfaces:
       GitServer:
-  opencsg.com/csghub-server/builder/git/mirrorserver:
+  github.com/aitra-ai/aitra-server/builder/git/mirrorserver:
     config:
     interfaces:
       MirrorServer:
-  opencsg.com/csghub-server/builder/git/membership:
+  github.com/aitra-ai/aitra-server/builder/git/membership:
     config:
     interfaces:
       GitMemerShip:
-  opencsg.com/csghub-server/builder/rsa:
+  github.com/aitra-ai/aitra-server/builder/rsa:
     config:
     interfaces:
       KeysReader:
-  opencsg.com/csghub-server/builder/prometheus:
+  github.com/aitra-ai/aitra-server/builder/prometheus:
     config:
     interfaces:
       PrometheusClient:
-  opencsg.com/csghub-server/builder/mq:
+  github.com/aitra-ai/aitra-server/builder/mq:
     config:
     interfaces:
       MessageQueueFactory:
       MessageQueue:
-  opencsg.com/csghub-server/mirror/cache:
+  github.com/aitra-ai/aitra-server/mirror/cache:
     config:
     interfaces:
       Cache:
-  opencsg.com/csghub-server/mirror/hook:
+  github.com/aitra-ai/aitra-server/mirror/hook:
     config:
     interfaces:
       MessageSender:
-  opencsg.com/csghub-server/mirror/filter:
+  github.com/aitra-ai/aitra-server/mirror/filter:
     config:
     interfaces:
       Filter:
-  opencsg.com/csghub-server/common/types:
+  github.com/aitra-ai/aitra-server/common/types:
     config:
     interfaces:
       SensitiveRequestV2:
-  opencsg.com/csghub-server/mq:
+  github.com/aitra-ai/aitra-server/mq:
     config:
     interfaces:
       MessageQueue:
-  opencsg.com/csghub-server/builder/store/s3:
+  github.com/aitra-ai/aitra-server/builder/store/s3:
     config:
     interfaces:
       Client:
       Core:
-  opencsg.com/csghub-server/builder/deploy:
+  github.com/aitra-ai/aitra-server/builder/deploy:
     config:
     interfaces:
       Deployer:
-  opencsg.com/csghub-server/builder/deploy/cluster:
+  github.com/aitra-ai/aitra-server/builder/deploy/cluster:
     config:
     interfaces:
       Pool:
-  opencsg.com/csghub-server/builder/deploy/scheduler:
+  github.com/aitra-ai/aitra-server/builder/deploy/scheduler:
     config:
     interfaces:
       Scheduler:
-  opencsg.com/csghub-server/builder/deploy/imagerunner:
+  github.com/aitra-ai/aitra-server/builder/deploy/imagerunner:
     config:
     interfaces:
       Runner:
-  opencsg.com/csghub-server/builder/deploy/imagebuilder:
+  github.com/aitra-ai/aitra-server/builder/deploy/imagebuilder:
     config:
     interfaces:
       Builder:
-  opencsg.com/csghub-server/accounting/component:
+  github.com/aitra-ai/aitra-server/accounting/component:
     config:
     interfaces:
       AccountingUserComponent:
@@ -172,25 +172,25 @@ packages:
       AccountingInvoiceComponent:
       StripeComponent:
       SubscriptionComponent:
-  opencsg.com/csghub-server/builder/accounting:
+  github.com/aitra-ai/aitra-server/builder/accounting:
     config:
     interfaces:
       AccountingClient:
-  opencsg.com/csghub-server/builder/parquet:
+  github.com/aitra-ai/aitra-server/builder/parquet:
     config:
     interfaces:
       Reader:
       LimitOffsetCountReader:
-  opencsg.com/csghub-server/builder/multisync:
+  github.com/aitra-ai/aitra-server/builder/multisync:
     config:
     interfaces:
       Client:
-  opencsg.com/csghub-server/builder/store/cache:
+  github.com/aitra-ai/aitra-server/builder/store/cache:
     config:
     interfaces:
       RedisClient:
       LfsCache:
-  opencsg.com/csghub-server/builder/captcha:
+  github.com/aitra-ai/aitra-server/builder/captcha:
     config:
     interfaces:
       Interface:
@@ -202,12 +202,12 @@ packages:
     config:
     interfaces:
       Client:
-  opencsg.com/csghub-server/builder/temporal:
+  github.com/aitra-ai/aitra-server/builder/temporal:
     config:
     interfaces:
       Client:
       ScheduleClient:
-  opencsg.com/csghub-server/builder/importer:
+  github.com/aitra-ai/aitra-server/builder/importer:
     config:
     interfaces:
       Importer:
@@ -222,51 +222,51 @@ packages:
       OperationServiceClient:
       SmartHTTPServiceClient:
       RemoteServiceClient:
-  opencsg.com/csghub-server/builder/dataviewer:
+  github.com/aitra-ai/aitra-server/builder/dataviewer:
     config:
     interfaces:
       DataviewerClient:
-  opencsg.com/csghub-server/dataviewer/workflows:
+  github.com/aitra-ai/aitra-server/dataviewer/workflows:
     config:
     interfaces:
       DataViewerActivity:
-  opencsg.com/csghub-server/dataviewer/component:
+  github.com/aitra-ai/aitra-server/dataviewer/component:
     config:
     interfaces:
       DatasetViewerComponent:
-  opencsg.com/csghub-server/aigateway/component:
+  github.com/aitra-ai/aitra-server/aigateway/component:
     config:
       all: true
-  opencsg.com/csghub-server/aigateway/handler:
+  github.com/aitra-ai/aitra-server/aigateway/handler:
     config:
     interfaces:
       CommonResponseWriter:
       AgentAdapter:
-  opencsg.com/csghub-server/aigateway/token:
+  github.com/aitra-ai/aitra-server/aigateway/token:
     config:
       all: true
-  opencsg.com/csghub-server/notification/component:
+  github.com/aitra-ai/aitra-server/notification/component:
     config:
     interfaces:
       NotificationComponent:
       MailComponent:
-  opencsg.com/csghub-server/notification/notifychannel/channel/lark/cache:
+  github.com/aitra-ai/aitra-server/notification/notifychannel/channel/lark/cache:
     interfaces:
       LarkCache:
-  opencsg.com/csghub-server/notification/notifychannel/channel/lark/client:
+  github.com/aitra-ai/aitra-server/notification/notifychannel/channel/lark/client:
     interfaces:
       LarkService:
-  opencsg.com/csghub-server/runner/component:
+  github.com/aitra-ai/aitra-server/runner/component:
     config:
     interfaces:
       ImagebuilderComponent:
       WorkFlowComponent:
       ServiceComponent:
       ClusterComponent:
-  opencsg.com/csghub-server/logcollector/component:
+  github.com/aitra-ai/aitra-server/logcollector/component:
     config:
       all: true
-  opencsg.com/csghub-server/builder/mcp:
+  github.com/aitra-ai/aitra-server/builder/mcp:
     config:
     interfaces:
       Client:

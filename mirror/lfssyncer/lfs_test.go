@@ -19,20 +19,20 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	mock_gitserver "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/git/gitserver"
-	mock_database "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/database"
-	mock_s3 "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/s3"
-	mock_workflow "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/temporal"
-	mock_component "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	mock_cache "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/mirror/cache"
-	mock_filter "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/mirror/filter"
-	mock_hook "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/mirror/hook"
+	mock_gitserver "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	mock_database "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/database"
+	mock_s3 "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/s3"
+	mock_workflow "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/temporal"
+	mock_component "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	mock_cache "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/mirror/cache"
+	mock_filter "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/mirror/filter"
+	mock_hook "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/mirror/hook"
 
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/mirror/hook"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/mirror/hook"
 )
 
 // Test suite for LfsSyncWorker

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/OpenCSGs/gitea-go-sdk/gitea"
-	"opencsg.com/csghub-server/builder/git/mirrorserver"
+	"github.com/aitra-ai/aitra-server/builder/git/mirrorserver"
 )
 
 const (

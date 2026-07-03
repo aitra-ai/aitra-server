@@ -1,9 +1,9 @@
 package git
 
 import (
-	"opencsg.com/csghub-server/builder/git/membership"
-	"opencsg.com/csghub-server/builder/git/membership/gitea"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/git/membership"
+	"github.com/aitra-ai/aitra-server/builder/git/membership/gitea"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func NewMemberShip(config config.Config) (membership.GitMemerShip, error) {

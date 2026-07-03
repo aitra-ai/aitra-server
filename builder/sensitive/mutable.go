@@ -3,7 +3,7 @@ package sensitive
 import (
 	"log/slog"
 
-	"opencsg.com/csghub-server/builder/sensitive/internal"
+	"github.com/aitra-ai/aitra-server/builder/sensitive/internal"
 )
 
 type Mutable struct {

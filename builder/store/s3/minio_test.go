@@ -12,7 +12,7 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/s3"
+	"github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/s3"
 )
 
 func TestMinIO_UploadAndValidate(t *testing.T) {

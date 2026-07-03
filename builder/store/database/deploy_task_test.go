@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/tests"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/tests"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestDeployTaskStore_CRUD(t *testing.T) {

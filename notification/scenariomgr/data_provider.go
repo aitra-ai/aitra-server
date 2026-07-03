@@ -2,9 +2,9 @@ package scenariomgr
 
 import (
 	"fmt"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 // DataProvider is a component that provides data for the scenario manager,

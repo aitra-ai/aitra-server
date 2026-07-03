@@ -6,7 +6,7 @@ import (
 	"context"
 	"errors"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func (c *clusterComponentImpl) LabelNode(ctx context.Context, req *types.NodeLabel) error {

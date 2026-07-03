@@ -16,14 +16,14 @@ import (
 
 	"github.com/blang/semver/v4"
 	gguf "github.com/gpustack/gguf-parser-go"
-	"opencsg.com/csghub-server/builder/git"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/builder/git"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
 )
 
 var (
@@ -881,8 +881,8 @@ func getJsonfiles(subPath string) (list []string, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("getting current directory error: %w", err)
 	}
-	// replace cmd/csghub-server
-	currentDir = strings.Replace(currentDir, "cmd/csghub-server", "", 1)
+	// replace cmd/aitra-server
+	currentDir = strings.Replace(currentDir, "cmd/aitra-server", "", 1)
 	enginePath := filepath.Join(currentDir, "configs", subPath)
 	_, err = os.Stat(enginePath)
 	if err != nil {

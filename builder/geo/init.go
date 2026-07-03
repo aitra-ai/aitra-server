@@ -1,6 +1,6 @@
 package geo
 
-import "opencsg.com/csghub-server/common/config"
+import "github.com/aitra-ai/aitra-server/common/config"
 
 var ipLocator IPLocator
 var cityToCdnDomain map[string]string

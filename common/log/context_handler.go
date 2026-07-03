@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"opencsg.com/csghub-server/common/utils/trace"
+	"github.com/aitra-ai/aitra-server/common/utils/trace"
 )
 
 // ContextHandler is a slog.Handler that adds trace ID and session ID to every log record.

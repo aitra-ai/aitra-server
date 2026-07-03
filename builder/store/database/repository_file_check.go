@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 // RepositoryFileCheck is the sensitive check record for a repository file

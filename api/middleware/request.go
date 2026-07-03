@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/common/utils/trace"
+	"github.com/aitra-ai/aitra-server/common/utils/trace"
 )
 
 func Request() gin.HandlerFunc {

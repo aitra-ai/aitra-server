@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"opencsg.com/csghub-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
 )
 
 // unsupported tokenizer error

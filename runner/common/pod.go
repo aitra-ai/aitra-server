@@ -8,7 +8,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	//"opencsg.com/csghub-server/builder/deploy/cluster"
+	//"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
 	"k8s.io/client-go/kubernetes"
 )
 

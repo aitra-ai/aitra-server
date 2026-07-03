@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	mockcomp "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/user/component"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/builder/testutil"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
+	mockcomp "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/user/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/builder/testutil"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type MemberTester struct {

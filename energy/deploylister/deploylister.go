@@ -14,8 +14,8 @@ import (
 
 	"github.com/uptrace/bun"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/energy/aggregator"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/energy/aggregator"
 )
 
 // Lister implements aggregator.DeploymentLister.

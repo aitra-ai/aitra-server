@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/uptrace/bun"
-	"opencsg.com/csghub-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/errorx"
 )
 
 type Discussion struct {

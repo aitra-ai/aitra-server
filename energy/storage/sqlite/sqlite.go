@@ -19,7 +19,7 @@ import (
 
 	_ "modernc.org/sqlite" // registers the pure-Go "sqlite" sql driver (no CGO)
 
-	"opencsg.com/csghub-server/energy"
+	"github.com/aitra-ai/aitra-server/energy"
 )
 
 // Backend is a SQLite-backed StorageBackend.

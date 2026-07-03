@@ -3,9 +3,9 @@ package imagerunner
 import (
 	"context"
 
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 var _ Runner = (*LocalRunner)(nil)

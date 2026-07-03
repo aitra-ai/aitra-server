@@ -8,9 +8,9 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/handler"
-	"opencsg.com/csghub-server/api/middleware"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/api/handler"
+	"github.com/aitra-ai/aitra-server/api/middleware"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func NewRProxyRouter(config *config.Config) (*gin.Engine, error) {

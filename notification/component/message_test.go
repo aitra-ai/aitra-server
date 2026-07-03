@@ -9,12 +9,12 @@ import (
 	"github.com/stretchr/testify/mock"
 
 	"github.com/stretchr/testify/assert"
-	mockcache "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/cache"
-	mockdb "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/database"
-	mockmq "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/mq"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	mockcache "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/cache"
+	mockdb "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/database"
+	mockmq "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/mq"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestGetUnreadCount(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
-	csgtrace "opencsg.com/csghub-server/common/utils/trace"
+	csgtrace "github.com/aitra-ai/aitra-server/common/utils/trace"
 )
 
 func TestContextHandler_Handle(t *testing.T) {

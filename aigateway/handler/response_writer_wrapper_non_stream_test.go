@@ -11,10 +11,10 @@ import (
 	"github.com/openai/openai-go/v3"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/component"
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/compress"
-	"opencsg.com/csghub-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/component"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/compress"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
 )
 
 func TestNonStreamResponseWriter_Write(t *testing.T) {

@@ -11,8 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mockcomponent "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	"opencsg.com/csghub-server/common/types"
+	mockcomponent "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestModelHandler_CreateInferenceVersion_Success(t *testing.T) {

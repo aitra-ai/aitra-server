@@ -13,9 +13,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"opencsg.com/csghub-server/aigateway/component"
-	"opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/aigateway/component"
+	"github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
 )
 
 type CommonResponseWriter interface {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"opencsg.com/csghub-server/common/utils/trace"
+	"github.com/aitra-ai/aitra-server/common/utils/trace"
 )
 
 func TestRequest(t *testing.T) {

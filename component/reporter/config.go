@@ -1,10 +1,10 @@
 package reporter
 
 import (
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 	"time"
 
-	ltypes "opencsg.com/csghub-server/logcollector/types"
+	ltypes "github.com/aitra-ai/aitra-server/logcollector/types"
 )
 
 // Config returns a default configuration

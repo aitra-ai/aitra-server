@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"strings"
 
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/notification/utils"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/notification/utils"
 
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	dm20151123 "github.com/alibabacloud-go/dm-20151123/v2/client"

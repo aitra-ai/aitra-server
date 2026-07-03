@@ -6,13 +6,13 @@ import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
-	"opencsg.com/csghub-server/api/middleware"
-	"opencsg.com/csghub-server/builder/git"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/dataviewer/handler"
-	"opencsg.com/csghub-server/dataviewer/workflows"
+	"github.com/aitra-ai/aitra-server/api/middleware"
+	"github.com/aitra-ai/aitra-server/builder/git"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/dataviewer/handler"
+	"github.com/aitra-ai/aitra-server/dataviewer/workflows"
 )
 
 type DataViewerService struct {

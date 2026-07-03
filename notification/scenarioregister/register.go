@@ -1,10 +1,10 @@
 package scenarioregister
 
 import (
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/notification/scenariomgr"
-	"opencsg.com/csghub-server/notification/scenariomgr/scenario/emailverifycode"
-	"opencsg.com/csghub-server/notification/scenariomgr/scenario/internalnotification"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/notification/scenariomgr"
+	"github.com/aitra-ai/aitra-server/notification/scenariomgr/scenario/emailverifycode"
+	"github.com/aitra-ai/aitra-server/notification/scenariomgr/scenario/internalnotification"
 )
 
 func Register(d *scenariomgr.DataProvider) {

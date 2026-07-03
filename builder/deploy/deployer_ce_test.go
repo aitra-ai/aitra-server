@@ -11,14 +11,14 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mockbuilder "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/deploy/imagebuilder"
-	mockrunner "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/deploy/imagerunner"
-	mockdb "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/tests"
-	"opencsg.com/csghub-server/common/types"
+	mockbuilder "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/deploy/imagebuilder"
+	mockrunner "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/deploy/imagerunner"
+	mockdb "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/tests"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func newTestDeployer(t *testing.T) *testDepolyerWithMocks {

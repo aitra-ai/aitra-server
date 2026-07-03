@@ -3,7 +3,7 @@ package gitserver
 import (
 	"net/http"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type CreateUserRequest struct {

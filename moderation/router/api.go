@@ -2,13 +2,13 @@ package router
 
 import (
 	"fmt"
-	"opencsg.com/csghub-server/builder/instrumentation"
+	"github.com/aitra-ai/aitra-server/builder/instrumentation"
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/middleware"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/moderation/handler"
+	"github.com/aitra-ai/aitra-server/api/middleware"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/moderation/handler"
 )
 
 func NewRouter(config *config.Config) (*gin.Engine, error) {

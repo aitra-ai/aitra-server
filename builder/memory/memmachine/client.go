@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type Client struct {

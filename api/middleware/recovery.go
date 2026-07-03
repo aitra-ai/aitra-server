@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	bld "opencsg.com/csghub-server/builder/prometheus"
-	"opencsg.com/csghub-server/common/utils/trace"
+	bld "github.com/aitra-ai/aitra-server/builder/prometheus"
+	"github.com/aitra-ai/aitra-server/common/utils/trace"
 )
 
 // Recovery returns a middleware that recovers from any panics and writes a 500 if there was one.

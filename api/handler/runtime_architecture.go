@@ -8,14 +8,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.temporal.io/sdk/client"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/api/workflow"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/utils/common"
-	"opencsg.com/csghub-server/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/api/workflow"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/component"
 )
 
 func NewRuntimeArchitectureHandler(config *config.Config) (*RuntimeArchitectureHandler, error) {

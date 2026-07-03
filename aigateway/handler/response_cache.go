@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 // ResponseCache provides response caching for non-streaming chat completions.

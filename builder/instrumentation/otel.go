@@ -24,7 +24,7 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func convEndpoint(s string) (string, error) {
@@ -164,7 +164,7 @@ func SetupOTelSDK(ctx context.Context, config *config.Config, serviceName string
 		)
 		handlers := []slog.Handler{
 			slog.Default().Handler(),
-			otelslog.NewHandler("csghub-server"),
+			otelslog.NewHandler("aitra-server"),
 		}
 		slog.SetDefault(slog.New(slogmulti.Fanout(handlers...)))
 

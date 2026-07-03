@@ -8,12 +8,12 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"opencsg.com/csghub-server/builder/deploy/cluster"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	rcommon "opencsg.com/csghub-server/runner/common"
-	rtypes "opencsg.com/csghub-server/runner/types"
-	"opencsg.com/csghub-server/runner/utils"
+	"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	rcommon "github.com/aitra-ai/aitra-server/runner/common"
+	rtypes "github.com/aitra-ai/aitra-server/runner/types"
+	"github.com/aitra-ai/aitra-server/runner/utils"
 )
 
 type ClusterWatcher interface {

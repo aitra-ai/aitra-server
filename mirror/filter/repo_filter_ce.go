@@ -5,8 +5,8 @@ package filter
 import (
 	"context"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 type RepoFilter struct {

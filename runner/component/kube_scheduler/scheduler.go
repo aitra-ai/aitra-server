@@ -3,7 +3,7 @@ package kube_scheduler
 import (
 	"github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
 	v1 "knative.dev/serving/pkg/apis/serving/v1"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 	lwsv1 "sigs.k8s.io/lws/api/leaderworkerset/v1"
 )
 

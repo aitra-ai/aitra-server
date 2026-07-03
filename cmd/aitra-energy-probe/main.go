@@ -27,13 +27,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/energy"
-	"opencsg.com/csghub-server/energy/aggregator"
-	"opencsg.com/csghub-server/energy/metering"
-	"opencsg.com/csghub-server/energy/metrics"
-	"opencsg.com/csghub-server/energy/prom"
-	"opencsg.com/csghub-server/energy/storage/sqlite"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/energy"
+	"github.com/aitra-ai/aitra-server/energy/aggregator"
+	"github.com/aitra-ai/aitra-server/energy/metering"
+	"github.com/aitra-ai/aitra-server/energy/metrics"
+	"github.com/aitra-ai/aitra-server/energy/prom"
+	"github.com/aitra-ai/aitra-server/energy/storage/sqlite"
 )
 
 func main() {

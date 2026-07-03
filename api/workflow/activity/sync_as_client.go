@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"opencsg.com/csghub-server/builder/multisync"
+	"github.com/aitra-ai/aitra-server/builder/multisync"
 )
 
 func (a *Activities) SyncAsClient(ctx context.Context) error {

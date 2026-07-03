@@ -1,6 +1,6 @@
 package types
 
-import "opencsg.com/csghub-server/runner/utils"
+import "github.com/aitra-ai/aitra-server/runner/utils"
 
 type Validator func(value string) bool
 

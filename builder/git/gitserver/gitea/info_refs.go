@@ -4,7 +4,7 @@ import (
 	"context"
 	"io"
 
-	"opencsg.com/csghub-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
 )
 
 func (c *Client) InfoRefsResponse(ctx context.Context, req gitserver.InfoRefsReq) (io.Reader, error) {

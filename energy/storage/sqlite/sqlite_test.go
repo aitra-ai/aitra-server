@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/energy"
-	"opencsg.com/csghub-server/energy/storage/sqlite"
+	"github.com/aitra-ai/aitra-server/energy"
+	"github.com/aitra-ai/aitra-server/energy/storage/sqlite"
 )
 
 func newBackend(t *testing.T) *sqlite.Backend {

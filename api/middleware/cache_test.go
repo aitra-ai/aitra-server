@@ -10,7 +10,7 @@ import (
 	"github.com/chenyahui/gin-cache/persist"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"opencsg.com/csghub-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
 )
 
 func TestCacheStrategyTrendingRepos(t *testing.T) {

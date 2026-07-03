@@ -12,7 +12,7 @@ local_only
 /jetstream
 .env
 *.sh
-cmd/csghub-server/__debug_*
+cmd/aitra-server/__debug_*
 
 .data
 */*/_api_test/
@@ -29,3 +29,4 @@ docs/docs.go
 data/pgdata/
 data/gitaly/
 /tmp/
+aitra-energy-probe

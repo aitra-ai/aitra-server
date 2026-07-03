@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 	"time"
 )
 

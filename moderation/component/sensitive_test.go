@@ -6,11 +6,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mock_sensitive "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/moderation/checker"
+	mock_sensitive "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/moderation/checker"
 )
 
 func TestSensitiveComponentImpl_PassTextCheck(t *testing.T) {

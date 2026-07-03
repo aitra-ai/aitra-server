@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	mockcomponent "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/dataviewer/component"
-	"opencsg.com/csghub-server/builder/testutil"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/dataviewer/common"
+	mockcomponent "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/dataviewer/component"
+	"github.com/aitra-ai/aitra-server/builder/testutil"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/dataviewer/common"
 )
 
 type DatasetViewerTester struct {

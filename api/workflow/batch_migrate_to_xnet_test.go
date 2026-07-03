@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/api/workflow"
+	"github.com/aitra-ai/aitra-server/api/workflow"
 )
 
 func TestWorkflow_BatchMigrateToXnetWorkflow_Success(t *testing.T) {

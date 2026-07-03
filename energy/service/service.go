@@ -10,15 +10,15 @@ import (
 	"log/slog"
 	"time"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/energy"
-	"opencsg.com/csghub-server/energy/aggregator"
-	"opencsg.com/csghub-server/energy/deploylister"
-	"opencsg.com/csghub-server/energy/metering"
-	"opencsg.com/csghub-server/energy/metrics"
-	"opencsg.com/csghub-server/energy/prom"
-	_ "opencsg.com/csghub-server/energy/storage/memory" // registers "memory" backend
-	_ "opencsg.com/csghub-server/energy/storage/sqlite" // registers "sqlite" backend
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/energy"
+	"github.com/aitra-ai/aitra-server/energy/aggregator"
+	"github.com/aitra-ai/aitra-server/energy/deploylister"
+	"github.com/aitra-ai/aitra-server/energy/metering"
+	"github.com/aitra-ai/aitra-server/energy/metrics"
+	"github.com/aitra-ai/aitra-server/energy/prom"
+	_ "github.com/aitra-ai/aitra-server/energy/storage/memory" // registers "memory" backend
+	_ "github.com/aitra-ai/aitra-server/energy/storage/sqlite" // registers "sqlite" backend
 )
 
 // Options carries everything the wiring needs, resolved by the caller.

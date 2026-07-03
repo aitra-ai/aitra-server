@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	multisync_mock "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/multisync"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/types"
+	multisync_mock "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/multisync"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestMultiSyncComponent_More(t *testing.T) {

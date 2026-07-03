@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/aigateway/component"
-	"opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/compress"
+	"github.com/aitra-ai/aitra-server/aigateway/component"
+	"github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/compress"
 )
 
 type nonStreamResponseWriter struct {

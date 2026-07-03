@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/utils/common"
-	"opencsg.com/csghub-server/mirror/component"
-	"opencsg.com/csghub-server/mirror/manager"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/mirror/component"
+	"github.com/aitra-ai/aitra-server/mirror/manager"
 )
 
 type ManagerHandler struct {

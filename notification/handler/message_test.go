@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/notification/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/notification/component"
 
-	mc "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/notification/component"
+	mc "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/notification/component"
 )
 
 // _mock for test

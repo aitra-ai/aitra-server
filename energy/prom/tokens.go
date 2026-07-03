@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"opencsg.com/csghub-server/energy/aggregator"
+	"github.com/aitra-ai/aitra-server/energy/aggregator"
 )
 
 // TokenSource implements aggregator.TokenSource by querying Prometheus for an

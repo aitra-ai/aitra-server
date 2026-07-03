@@ -1,9 +1,9 @@
 package callback
 
 import (
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/filter"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/filter"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type SyncVersionGenerator interface {

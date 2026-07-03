@@ -6,8 +6,8 @@ import (
 
 	"github.com/openai/openai-go/v3"
 	"github.com/stretchr/testify/assert"
-	mocktoken "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/token"
+	mocktoken "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/token"
 )
 
 func TestEmbeddingTokenCounter_Usage_WithEmbeddingResponse(t *testing.T) {

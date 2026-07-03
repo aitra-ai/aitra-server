@@ -11,9 +11,9 @@ import (
 	green20220302 "github.com/alibabacloud-go/green-20220302/v2/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
-	mockgreen "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/common/types"
+	mockgreen "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestChainImpl_AliYun_PassTextCheck(t *testing.T) {

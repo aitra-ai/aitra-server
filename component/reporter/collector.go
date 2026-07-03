@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/component/reporter/sender"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/component/reporter/sender"
 
-	"opencsg.com/csghub-server/common/types"
-	ltypes "opencsg.com/csghub-server/logcollector/types"
+	"github.com/aitra-ai/aitra-server/common/types"
+	ltypes "github.com/aitra-ai/aitra-server/logcollector/types"
 )
 
 // LogCollector defines the interface for a log collection service.

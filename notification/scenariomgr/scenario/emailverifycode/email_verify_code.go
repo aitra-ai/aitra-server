@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/notification/notifychannel"
-	"opencsg.com/csghub-server/notification/scenariomgr"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/notification/notifychannel"
+	"github.com/aitra-ai/aitra-server/notification/scenariomgr"
 )
 
 // implement scenariomgr.GetDataFunc to get email data

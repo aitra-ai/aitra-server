@@ -7,7 +7,7 @@ import (
 	"net/url"
 
 	"github.com/openai/openai-go/v3"
-	"opencsg.com/csghub-server/common/utils/trace"
+	"github.com/aitra-ai/aitra-server/common/utils/trace"
 )
 
 type ReverseProxy interface {

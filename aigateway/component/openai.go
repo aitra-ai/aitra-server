@@ -13,12 +13,12 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
-	"opencsg.com/csghub-server/aigateway/token"
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/event"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/builder/store/database"
-	commontypes "opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/event"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	commontypes "github.com/aitra-ai/aitra-server/common/types"
 )
 
 const (

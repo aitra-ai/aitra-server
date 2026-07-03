@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/tests"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/tests"
 )
 
 func TestUserTagStoreImpl_ResetUserTags(t *testing.T) {

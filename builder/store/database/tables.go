@@ -3,7 +3,7 @@ package database
 import (
 	"time"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type RecomWeightName string // like freshess, downloads, quality, op, etc

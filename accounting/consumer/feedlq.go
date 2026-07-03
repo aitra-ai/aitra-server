@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"time"
 
-	"opencsg.com/csghub-server/mq"
+	"github.com/aitra-ai/aitra-server/mq"
 )
 
 var (

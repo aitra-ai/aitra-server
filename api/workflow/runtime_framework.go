@@ -6,7 +6,7 @@ import (
 
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func RuntimeFrameworkWorkflow(ctx workflow.Context, req types.RuntimeFrameworkModels) error {

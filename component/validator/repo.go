@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"opencsg.com/csghub-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
 )
 
 func ValidateRepoPath(path string) error {

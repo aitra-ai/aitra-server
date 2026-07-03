@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/component/reporter"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/component/reporter"
 
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/deploy/imagebuilder"
-	"opencsg.com/csghub-server/builder/deploy/imagerunner"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/deploy/imagebuilder"
+	"github.com/aitra-ai/aitra-server/builder/deploy/imagerunner"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 var (

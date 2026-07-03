@@ -1,8 +1,8 @@
 package sensitive
 
 import (
-	"opencsg.com/csghub-server/builder/sensitive/internal"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/sensitive/internal"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func LoadFromDB() internal.Loader {

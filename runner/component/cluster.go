@@ -7,11 +7,11 @@ import (
 	"math"
 	"time"
 
-	"opencsg.com/csghub-server/builder/deploy/cluster"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	rcommon "opencsg.com/csghub-server/runner/common"
+	"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	rcommon "github.com/aitra-ai/aitra-server/runner/common"
 )
 
 type clusterComponentImpl struct {

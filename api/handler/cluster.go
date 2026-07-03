@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/httpbase"
-	code "opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/utils/common"
-	"opencsg.com/csghub-server/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	code "github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/component"
 )
 
 func NewClusterHandler(config *config.Config) (*ClusterHandler, error) {

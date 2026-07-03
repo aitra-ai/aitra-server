@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 	"strings"
 	"sync"
 	"time"
@@ -14,9 +14,9 @@ import (
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/kubernetes"
 
-	"opencsg.com/csghub-server/common/types"
-	ltypes "opencsg.com/csghub-server/logcollector/types"
-	rtypes "opencsg.com/csghub-server/runner/types"
+	"github.com/aitra-ai/aitra-server/common/types"
+	ltypes "github.com/aitra-ai/aitra-server/logcollector/types"
+	rtypes "github.com/aitra-ai/aitra-server/runner/types"
 )
 
 // PodMonitor monitors pods in specified namespaces and manages log streams

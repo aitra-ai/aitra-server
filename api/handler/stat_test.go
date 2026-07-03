@@ -10,9 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	mockcom "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/types"
+	mockcom "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestStatHandler_GetStatSnap(t *testing.T) {

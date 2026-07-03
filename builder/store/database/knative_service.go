@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/uptrace/bun"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 
 	corev1 "k8s.io/api/core/v1"
 )

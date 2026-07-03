@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"opencsg.com/csghub-server/builder/memory"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/memory"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type mockMemoryAdapter struct {

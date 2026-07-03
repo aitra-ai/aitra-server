@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go/jetstream"
-	bldmq "opencsg.com/csghub-server/builder/mq"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/mq"
+	bldmq "github.com/aitra-ai/aitra-server/builder/mq"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/mq"
 )
 
 var (

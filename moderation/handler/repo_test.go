@@ -7,13 +7,13 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/mocks"
-	mocktemporal "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/temporal"
-	mockcomp "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/moderation/component"
-	"opencsg.com/csghub-server/builder/testutil"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/moderation/workflow"
-	"opencsg.com/csghub-server/moderation/workflow/common"
+	mocktemporal "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/temporal"
+	mockcomp "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/moderation/component"
+	"github.com/aitra-ai/aitra-server/builder/testutil"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/moderation/workflow"
+	"github.com/aitra-ai/aitra-server/moderation/workflow/common"
 )
 
 type RepoTester struct {

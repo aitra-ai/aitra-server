@@ -16,15 +16,15 @@ import (
 
 	sdkTemporal "go.temporal.io/sdk/temporal"
 
-	"opencsg.com/csghub-server/api/workflow/activity"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/deploy/imagebuilder"
-	"opencsg.com/csghub-server/builder/deploy/imagerunner"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/component/reporter"
+	"github.com/aitra-ai/aitra-server/api/workflow/activity"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/deploy/imagebuilder"
+	"github.com/aitra-ai/aitra-server/builder/deploy/imagerunner"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/component/reporter"
 )
 
 const (

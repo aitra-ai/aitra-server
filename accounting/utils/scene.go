@@ -1,6 +1,6 @@
 package utils
 
-import "opencsg.com/csghub-server/common/types"
+import "github.com/aitra-ai/aitra-server/common/types"
 
 func IsNeedCalculateBill(scene types.SceneType) bool {
 	switch scene {

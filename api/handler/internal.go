@@ -11,13 +11,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.temporal.io/sdk/client"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/api/workflow"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/component"
-	dvCom "opencsg.com/csghub-server/dataviewer/common"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/api/workflow"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/component"
+	dvCom "github.com/aitra-ai/aitra-server/dataviewer/common"
 )
 
 func NewInternalHandler(config *config.Config) (*InternalHandler, error) {

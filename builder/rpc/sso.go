@@ -7,7 +7,7 @@ import (
 
 	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 	"golang.org/x/oauth2"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 const (

@@ -4,9 +4,9 @@ import (
 	"context"
 	"log/slog"
 
-	"opencsg.com/csghub-server/builder/deploy/cluster"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/logcollector/types"
+	"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/logcollector/types"
 )
 
 // LogFactory defines the interface for the log collection component.

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"opencsg.com/csghub-server/builder/geo"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/geo"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func TestCDNUrl(t *testing.T) {

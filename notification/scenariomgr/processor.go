@@ -12,13 +12,13 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/sync/errgroup"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/notification/notifychannel"
-	notifychannelfactory "opencsg.com/csghub-server/notification/notifychannel/factory"
-	"opencsg.com/csghub-server/notification/tmplmgr"
-	"opencsg.com/csghub-server/notification/utils"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/notification/notifychannel"
+	notifychannelfactory "github.com/aitra-ai/aitra-server/notification/notifychannel/factory"
+	"github.com/aitra-ai/aitra-server/notification/tmplmgr"
+	"github.com/aitra-ai/aitra-server/notification/utils"
 )
 
 const (

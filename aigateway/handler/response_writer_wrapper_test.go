@@ -9,8 +9,8 @@ import (
 	"github.com/openai/openai-go/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/component"
-	"opencsg.com/csghub-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/component"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
 )
 
 func TestResponseWriterWrapper_StreamWrite(t *testing.T) {

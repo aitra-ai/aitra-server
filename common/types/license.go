@@ -3,7 +3,7 @@ package types
 import (
 	"time"
 
-	"opencsg.com/csghub-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
 )
 
 var (

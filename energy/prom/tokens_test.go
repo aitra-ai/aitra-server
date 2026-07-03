@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/energy/prom"
+	"github.com/aitra-ai/aitra-server/energy/prom"
 )
 
 func TestWindowTokensSumsIncrease(t *testing.T) {

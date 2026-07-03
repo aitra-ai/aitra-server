@@ -3,7 +3,7 @@ package types
 import (
 	"encoding/json"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 // BaseModel represents the base model fields

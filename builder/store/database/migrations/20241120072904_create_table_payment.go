@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/uptrace/bun"
-	"opencsg.com/csghub-server/common/utils/payment/consts"
+	"github.com/aitra-ai/aitra-server/common/utils/payment/consts"
 	"time"
 )
 

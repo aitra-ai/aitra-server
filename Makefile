@@ -1,7 +1,7 @@
 .PHONY: test lint cover mock_wire mock_gen swag migrate_local
 
 build:
-	go build -o ./bin/csghub-server ./cmd/csghub-server
+	go build -o ./bin/aitra-server ./cmd/aitra-server
 
 test:
 	go test ./...
@@ -16,7 +16,7 @@ cover:
 
 mock_wire:
 	@echo "Running wire for component mocks..."
-	@go run -mod=mod github.com/google/wire/cmd/wire opencsg.com/csghub-server/component/...
+	@go run -mod=mod github.com/google/wire/cmd/wire github.com/aitra-ai/aitra-server/component/...
 	@if [ $$? -eq 0 ]; then \
 		echo "Renaming component wire_gen.go to wire_gen_test.go..."; \
 		mv component/wire_gen.go component/wire_gen_test.go; \
@@ -30,22 +30,22 @@ mock_gen:
 	mockery
 
 swag:
-	swag init --pd -d cmd/csghub-server/cmd/start,api/router,api/handler,builder/store/database,common/types,accounting/handler,user/handler,moderation/handler,component,dataviewer/handler,aigateway/handler,aigateway/types,notification/handler -g server.go
+	swag init --pd -d cmd/aitra-server/cmd/start,api/router,api/handler,builder/store/database,common/types,accounting/handler,user/handler,moderation/handler,component,dataviewer/handler,aigateway/handler,aigateway/types,notification/handler -g server.go
 
 migrate_local:
-	go run cmd/csghub-server/main.go migration migrate --config local.toml
+	go run cmd/aitra-server/main.go migration migrate --config local.toml
 	
 db_migrate:
-	@go run cmd/csghub-server/main.go migration migrate --config local.toml
+	@go run cmd/aitra-server/main.go migration migrate --config local.toml
 
 db_rollback:
-	@go run cmd/csghub-server/main.go migration rollback --config local.toml
+	@go run cmd/aitra-server/main.go migration rollback --config local.toml
 
 error_doc:
-	@go run cmd/csghub-server/main.go errorx doc-gen
+	@go run cmd/aitra-server/main.go errorx doc-gen
 
 error_scan:
-	@go run cmd/csghub-server/main.go errorx scan --dir $(dir) -v
+	@go run cmd/aitra-server/main.go errorx scan --dir $(dir) -v
 
 notify_gen:
-	@go run cmd/csghub-server/main.go notification notify-gen -l Info
+	@go run cmd/aitra-server/main.go notification notify-gen -l Info

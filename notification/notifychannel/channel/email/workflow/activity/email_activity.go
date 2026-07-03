@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"go.temporal.io/sdk/activity"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/types"
-	emailclient "opencsg.com/csghub-server/notification/notifychannel/channel/email/client"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/types"
+	emailclient "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/email/client"
 )
 
 type BatchSendEmail struct {

@@ -1,3 +1,11 @@
+# aitra-server
+
+> **aitra-server** is the backend of the [Aitra](https://github.com/aitra-ai) unified AI service platform — an OpenAI-compatible AI gateway with two-stage smart routing, usage accounting, energy metering (J/token, via [aitra-meter](https://github.com/aitra-ai/aitra-meter)), and one-click Knative model deployment.
+>
+> It is built on top of [CSGHub Server](https://github.com/OpenCSGs/csghub-server) by OpenCSG (Apache 2.0). The original CSGHub documentation follows below; Aitra-specific modules live in `aigateway/`, `energy/`, `accounting/`, and `user/`.
+
+---
+
 *[English](README_en.md) ∙ [简体中文](README_cn.md) ∙ [日本語](README_ja.md)*
 
 `CSGHub Server` is a part of the open source and reliable large model assets management platform - [CSGHub](https://github.com/OpenCSGs/CSGHub/). It focuses on management of models、datasets and other LLM assets through REST API。

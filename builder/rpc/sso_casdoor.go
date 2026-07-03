@@ -13,8 +13,8 @@ import (
 
 	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 	"golang.org/x/oauth2"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
 )
 
 type casdoorClientImpl struct {

@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/energy"
-	"opencsg.com/csghub-server/energy/storage/memory"
+	"github.com/aitra-ai/aitra-server/energy"
+	"github.com/aitra-ai/aitra-server/energy/storage/memory"
 )
 
 func TestMemoryChargebackAggregation(t *testing.T) {

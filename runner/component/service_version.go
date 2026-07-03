@@ -12,11 +12,11 @@ import (
 	"k8s.io/client-go/tools/cache"
 	v1 "knative.dev/serving/pkg/apis/serving/v1"
 	"knative.dev/serving/pkg/client/informers/externalversions"
-	"opencsg.com/csghub-server/builder/deploy/cluster"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	utils "opencsg.com/csghub-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/builder/deploy/cluster"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	utils "github.com/aitra-ai/aitra-server/common/utils/common"
 )
 
 var RevisionState string = "serving.knative.dev/revision-state"

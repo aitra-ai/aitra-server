@@ -1,8 +1,8 @@
 package checker
 
 import (
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 var contentChecker sensitive.SensitiveChecker

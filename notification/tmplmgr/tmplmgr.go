@@ -12,7 +12,7 @@ import (
 	"sync"
 	"text/template"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 //go:embed templates templates/_default

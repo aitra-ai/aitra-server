@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"opencsg.com/csghub-server/builder/loki"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/loki"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 // LogSender is the interface for sending logs to a backend

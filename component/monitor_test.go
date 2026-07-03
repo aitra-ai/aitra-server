@@ -6,16 +6,16 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/deploy"
-	prometheus_mock "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/prometheus"
-	mock_rpc "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/rpc"
-	mockdb "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/database"
-	deployer "opencsg.com/csghub-server/builder/deploy"
-	"opencsg.com/csghub-server/builder/prometheus"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/deploy"
+	prometheus_mock "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/prometheus"
+	mock_rpc "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/rpc"
+	mockdb "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/database"
+	deployer "github.com/aitra-ai/aitra-server/builder/deploy"
+	"github.com/aitra-ai/aitra-server/builder/prometheus"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func NewTestMonitorComponent(cfg *config.Config,

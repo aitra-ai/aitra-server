@@ -7,12 +7,12 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.temporal.io/sdk/client"
 	temporal_mock "go.temporal.io/sdk/mocks"
-	workflow_mock "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/temporal"
-	mockcomponent "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	"opencsg.com/csghub-server/api/workflow"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/builder/testutil"
-	"opencsg.com/csghub-server/common/types"
+	workflow_mock "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/temporal"
+	mockcomponent "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	"github.com/aitra-ai/aitra-server/api/workflow"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/testutil"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type RuntimeArchitectureTester struct {

@@ -10,9 +10,9 @@ import (
 	"context"
 
 	"github.com/stretchr/testify/mock"
-	"opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/s3"
-	"opencsg.com/csghub-server/common/tests"
+	"github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/s3"
+	"github.com/aitra-ai/aitra-server/common/tests"
 )
 
 // Injectors from wire.go:

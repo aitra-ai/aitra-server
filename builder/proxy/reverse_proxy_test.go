@@ -9,8 +9,8 @@ package proxy
 
 // 	"github.com/stretchr/testify/mock"
 // 	"github.com/stretchr/testify/require"
-// 	mockrpc "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/rpc"
-// 	"opencsg.com/csghub-server/builder/rpc"
+// 	mockrpc "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/rpc"
+// 	"github.com/aitra-ai/aitra-server/builder/rpc"
 // )
 
 // func TestReverseProxy(t *testing.T) {

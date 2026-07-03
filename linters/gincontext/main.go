@@ -16,8 +16,8 @@ import (
 )
 
 var lintPath = []string{
-	"opencsg.com/csghub-server/api/handler",
-	"opencsg.com/csghub-server/dataviewer/handler",
+	"github.com/aitra-ai/aitra-server/api/handler",
+	"github.com/aitra-ai/aitra-server/dataviewer/handler",
 }
 
 func main() {

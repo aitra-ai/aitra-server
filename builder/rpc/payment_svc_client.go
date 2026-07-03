@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/utils/money"
-	"opencsg.com/csghub-server/common/utils/payment/consts"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/utils/money"
+	"github.com/aitra-ai/aitra-server/common/utils/payment/consts"
 )
 
 type PaymentSvcClient interface {

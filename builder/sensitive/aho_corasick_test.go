@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/builder/sensitive/internal"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/builder/sensitive/internal"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func initTestACAutomaton() sensitive.SensitiveChecker {

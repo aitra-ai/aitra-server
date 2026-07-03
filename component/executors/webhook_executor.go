@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"reflect"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type WebHookExecutor interface {

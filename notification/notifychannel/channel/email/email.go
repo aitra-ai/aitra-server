@@ -7,13 +7,13 @@ import (
 	"log/slog"
 
 	"go.temporal.io/sdk/client"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	notifychannel "opencsg.com/csghub-server/notification/notifychannel"
-	emailclient "opencsg.com/csghub-server/notification/notifychannel/channel/email/client"
-	emailworkflow "opencsg.com/csghub-server/notification/notifychannel/channel/email/workflow"
-	"opencsg.com/csghub-server/notification/utils"
-	"opencsg.com/csghub-server/notification/workflow"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	notifychannel "github.com/aitra-ai/aitra-server/notification/notifychannel"
+	emailclient "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/email/client"
+	emailworkflow "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/email/workflow"
+	"github.com/aitra-ai/aitra-server/notification/utils"
+	"github.com/aitra-ai/aitra-server/notification/workflow"
 )
 
 type EmailChannel struct {

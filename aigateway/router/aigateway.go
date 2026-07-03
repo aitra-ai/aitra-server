@@ -5,10 +5,10 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/aigateway/handler"
-	"opencsg.com/csghub-server/api/middleware"
-	"opencsg.com/csghub-server/builder/instrumentation"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/aigateway/handler"
+	"github.com/aitra-ai/aitra-server/api/middleware"
+	"github.com/aitra-ai/aitra-server/builder/instrumentation"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func NewRouter(config *config.Config) (*gin.Engine, error) {

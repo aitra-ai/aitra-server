@@ -14,12 +14,12 @@ import (
 	"github.com/openai/openai-go/v3/packages/param"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mock_rpc "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/rpc"
-	mock_cache "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/common/config"
-	common_types "opencsg.com/csghub-server/common/types"
+	mock_rpc "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/rpc"
+	mock_cache "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/common/config"
+	common_types "github.com/aitra-ai/aitra-server/common/types"
 )
 
 func TestSplitContentIntoChunksByWindow_Table(t *testing.T) {

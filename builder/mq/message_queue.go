@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"sync"
 
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 type MessageQueue interface {

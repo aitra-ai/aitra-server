@@ -14,15 +14,15 @@ import (
 
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/log"
-	"opencsg.com/csghub-server/builder/deploy/common"
-	"opencsg.com/csghub-server/builder/deploy/imagebuilder"
-	"opencsg.com/csghub-server/builder/deploy/imagerunner"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	utilcommon "opencsg.com/csghub-server/common/utils/common"
-	"opencsg.com/csghub-server/component/reporter"
+	"github.com/aitra-ai/aitra-server/builder/deploy/common"
+	"github.com/aitra-ai/aitra-server/builder/deploy/imagebuilder"
+	"github.com/aitra-ai/aitra-server/builder/deploy/imagerunner"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	utilcommon "github.com/aitra-ai/aitra-server/common/utils/common"
+	"github.com/aitra-ai/aitra-server/component/reporter"
 )
 
 const (

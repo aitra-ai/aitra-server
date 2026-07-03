@@ -661,7 +661,7 @@ func genServiceName() string {
 		}
 	}
 	if len(autoGenServiceName) < 1 {
-		autoGenServiceName = fmt.Sprintf("%s_%s", "csghub-server", uuid.New().String())
+		autoGenServiceName = fmt.Sprintf("%s_%s", "aitra-server", uuid.New().String())
 	}
 	slog.Debug("auto generate service name", slog.String("service_name", autoGenServiceName))
 	return autoGenServiceName

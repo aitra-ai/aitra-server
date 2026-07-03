@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"opencsg.com/csghub-server/energy/aggregator"
-	"opencsg.com/csghub-server/energy/prom"
+	"github.com/aitra-ai/aitra-server/energy/aggregator"
+	"github.com/aitra-ai/aitra-server/energy/prom"
 )
 
 // testServer records the last query it received and returns a canned body.

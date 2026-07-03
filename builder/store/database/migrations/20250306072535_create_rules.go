@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/uptrace/bun"
-	"opencsg.com/csghub-server/common/types/enum"
+	"github.com/aitra-ai/aitra-server/common/types/enum"
 )
 
 type Rule struct {

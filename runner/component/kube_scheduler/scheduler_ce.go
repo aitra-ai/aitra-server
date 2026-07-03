@@ -2,7 +2,7 @@
 
 package kube_scheduler
 
-import "opencsg.com/csghub-server/common/types"
+import "github.com/aitra-ai/aitra-server/common/types"
 
 func NewApplier(config *types.Scheduler) Applier {
 	return &DefaultOpApplier{}

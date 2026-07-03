@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	bldprometheus "opencsg.com/csghub-server/builder/prometheus"
+	bldprometheus "github.com/aitra-ai/aitra-server/builder/prometheus"
 )
 
 // WebhookMetrics returns a middleware that collects metrics for webhook requests

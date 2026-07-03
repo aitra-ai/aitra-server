@@ -7,9 +7,9 @@ import (
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
-	mockcomponent "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	"opencsg.com/csghub-server/builder/testutil"
-	"opencsg.com/csghub-server/common/types"
+	mockcomponent "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	"github.com/aitra-ai/aitra-server/builder/testutil"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type SkillTester struct {

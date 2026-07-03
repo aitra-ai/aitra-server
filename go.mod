@@ -1,4 +1,4 @@
-module opencsg.com/csghub-server
+module github.com/aitra-ai/aitra-server
 
 go 1.25.5
 

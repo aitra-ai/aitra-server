@@ -2,14 +2,14 @@ package callback
 
 import (
 	"github.com/google/wire"
-	mock_git "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/git/gitserver"
-	mock_component "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	mock_callback "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component/callback"
-	"opencsg.com/csghub-server/builder/git/gitserver"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/tests"
-	"opencsg.com/csghub-server/component"
+	mock_git "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	mock_component "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	mock_callback "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component/callback"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/tests"
+	"github.com/aitra-ai/aitra-server/component"
 )
 
 var MockedSyncVersionGeneratorSet = wire.NewSet(

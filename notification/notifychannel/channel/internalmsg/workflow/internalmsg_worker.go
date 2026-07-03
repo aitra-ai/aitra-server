@@ -5,12 +5,12 @@ import (
 
 	temporalActivity "go.temporal.io/sdk/activity"
 	temporalWorker "go.temporal.io/sdk/worker"
-	"opencsg.com/csghub-server/builder/rpc"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	activity "opencsg.com/csghub-server/notification/notifychannel/channel/internalmsg/workflow/activity"
-	"opencsg.com/csghub-server/notification/notifychannel/worker"
+	"github.com/aitra-ai/aitra-server/builder/rpc"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	activity "github.com/aitra-ai/aitra-server/notification/notifychannel/channel/internalmsg/workflow/activity"
+	"github.com/aitra-ai/aitra-server/notification/notifychannel/worker"
 )
 
 const (

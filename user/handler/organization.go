@@ -7,13 +7,13 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/common/utils/common"
-	apicomponent "opencsg.com/csghub-server/component"
-	"opencsg.com/csghub-server/user/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/utils/common"
+	apicomponent "github.com/aitra-ai/aitra-server/component"
+	"github.com/aitra-ai/aitra-server/user/component"
 )
 
 func NewOrganizationHandler(config *config.Config) (*OrganizationHandler, error) {

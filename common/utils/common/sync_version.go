@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func AddPrefixBySourceID(sourceID int64, originString string) string {

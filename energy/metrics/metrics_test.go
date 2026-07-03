@@ -6,7 +6,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stretchr/testify/require"
 
-	"opencsg.com/csghub-server/energy"
+	"github.com/aitra-ai/aitra-server/energy"
 )
 
 // mustValue gathers from the registry and returns the value of the named metric

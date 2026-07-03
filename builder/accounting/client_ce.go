@@ -3,7 +3,7 @@
 package accounting
 
 import (
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func (ac *accountingClientImpl) QueryAllUsersBalance(per, page int) (any, error) {

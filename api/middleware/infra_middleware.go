@@ -3,8 +3,8 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"opencsg.com/csghub-server/builder/instrumentation"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/instrumentation"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func SetInfraMiddleware(r *gin.Engine, config *config.Config, serviceName string) {

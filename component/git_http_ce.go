@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"log/slog"
 
-	"opencsg.com/csghub-server/builder/git"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/builder/store/s3"
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/builder/git"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/store/s3"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 func NewGitHTTPComponentImpl(config *config.Config) (GitHTTPComponent, error) {

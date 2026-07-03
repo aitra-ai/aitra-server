@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"time"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 type RepositoryFile struct {

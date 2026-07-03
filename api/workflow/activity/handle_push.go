@@ -5,7 +5,7 @@ import (
 	"log/slog"
 
 	"go.temporal.io/sdk/activity"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func (a *Activities) WatchSpaceChange(ctx context.Context, req *types.GiteaCallbackPushReq) error {

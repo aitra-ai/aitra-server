@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"opencsg.com/csghub-server/builder/sensitive"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/sensitive"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 var knownImageFileExts = []string{".png", ".jpg", ".jpeg", ".gif", ".tif", ".tiff", ".svg", ".bmp", ".webp"}

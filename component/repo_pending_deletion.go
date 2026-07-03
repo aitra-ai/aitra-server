@@ -8,7 +8,7 @@ import (
 	"log/slog"
 	"time"
 
-	"opencsg.com/csghub-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
 )
 
 func (r *repoComponentImpl) DeletePendingDeletion(ctx context.Context) error {

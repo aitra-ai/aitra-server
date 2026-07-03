@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"gitlab.com/gitlab-org/gitaly/v16/proto/go/gitalypb"
-	"opencsg.com/csghub-server/builder/git/gitserver"
+	"github.com/aitra-ai/aitra-server/builder/git/gitserver"
 )
 
 func (c *Client) UpdateRef(ctx context.Context, req gitserver.UpdateRefReq) error {

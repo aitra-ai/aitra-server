@@ -7,14 +7,14 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"go.temporal.io/sdk/testsuite"
-	mock_git "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/git/gitserver"
-	mock_temporal "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/builder/temporal"
-	mock_component "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	mock_callback "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component/callback"
-	"opencsg.com/csghub-server/api/workflow"
-	"opencsg.com/csghub-server/builder/temporal"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/tests"
+	mock_git "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/git/gitserver"
+	mock_temporal "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/builder/temporal"
+	mock_component "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	mock_callback "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component/callback"
+	"github.com/aitra-ai/aitra-server/api/workflow"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/tests"
 )
 
 func newWorkflowTester(t *testing.T) (*workflowTester, error) {

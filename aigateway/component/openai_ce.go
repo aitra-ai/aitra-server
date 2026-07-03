@@ -5,13 +5,13 @@ package component
 import (
 	"context"
 
-	"opencsg.com/csghub-server/aigateway/types"
-	"opencsg.com/csghub-server/builder/event"
-	"opencsg.com/csghub-server/builder/store/cache"
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/errorx"
-	common_types "opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/aigateway/types"
+	"github.com/aitra-ai/aitra-server/builder/event"
+	"github.com/aitra-ai/aitra-server/builder/store/cache"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	common_types "github.com/aitra-ai/aitra-server/common/types"
 )
 
 type extendOpenai struct {

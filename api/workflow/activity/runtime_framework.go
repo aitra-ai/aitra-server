@@ -3,7 +3,7 @@ package activity
 import (
 	"context"
 
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/common/types"
 )
 
 func (a *Activities) RuntimeFrameworkScan(ctx context.Context, req types.RuntimeFrameworkModels) error {

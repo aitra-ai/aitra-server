@@ -11,13 +11,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	gwmockcomp "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/aigateway/component"
-	apicomp "opencsg.com/csghub-server/_mocks/opencsg.com/csghub-server/component"
-	gwcomp "opencsg.com/csghub-server/aigateway/component"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/builder/store/database"
-	comType "opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/component"
+	gwmockcomp "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/aigateway/component"
+	apicomp "github.com/aitra-ai/aitra-server/_mocks/github.com/aitra-ai/aitra-server/component"
+	gwcomp "github.com/aitra-ai/aitra-server/aigateway/component"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	comType "github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/component"
 )
 
 func NewTestMCPProxyHandler(mockSpaceComp component.SpaceComponent, mockMCPResComp gwcomp.MCPResourceComponent) (MCPProxyHandler, error) {

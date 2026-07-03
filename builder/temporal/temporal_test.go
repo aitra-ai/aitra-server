@@ -9,7 +9,7 @@ import (
 	"go.temporal.io/sdk/worker"
 	"go.temporal.io/sdk/workflow"
 	"go.temporal.io/server/temporaltest"
-	"opencsg.com/csghub-server/builder/temporal"
+	"github.com/aitra-ai/aitra-server/builder/temporal"
 )
 
 type Tester struct {

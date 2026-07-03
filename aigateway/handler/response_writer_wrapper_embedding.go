@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/openai/openai-go/v3"
-	"opencsg.com/csghub-server/aigateway/token"
+	"github.com/aitra-ai/aitra-server/aigateway/token"
 )
 
 type ResponseWriterWrapperEmbedding struct {

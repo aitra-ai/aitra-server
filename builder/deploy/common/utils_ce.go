@@ -2,7 +2,7 @@
 
 package common
 
-import "opencsg.com/csghub-server/common/types"
+import "github.com/aitra-ai/aitra-server/common/types"
 
 func GenerateScheduler(config DeployConfig) *types.Scheduler {
 	return nil

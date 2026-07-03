@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"opencsg.com/csghub-server/builder/loki"
-	"opencsg.com/csghub-server/common/types"
+	"github.com/aitra-ai/aitra-server/builder/loki"
+	"github.com/aitra-ai/aitra-server/common/types"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -6,7 +6,7 @@ import (
 	"context"
 	"sync"
 
-	"opencsg.com/csghub-server/energy"
+	"github.com/aitra-ai/aitra-server/energy"
 )
 
 // Backend keeps records in a slice guarded by a mutex.

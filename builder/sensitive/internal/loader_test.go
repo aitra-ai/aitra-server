@@ -3,7 +3,7 @@ package internal
 import (
 	"testing"
 
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 // testObserver is a mock observer for testing

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"gitlab.com/gitlab-org/gitaly/v16/proto/go/gitalypb"
-	gitalypb_mock "opencsg.com/csghub-server/_mocks/gitlab.com/gitlab-org/gitaly/v16/proto/go/gitalypb"
+	gitalypb_mock "github.com/aitra-ai/aitra-server/_mocks/gitlab.com/gitlab-org/gitaly/v16/proto/go/gitalypb"
 )
 
 func TestGitalyRepo_CloneProjectStorage(t *testing.T) {

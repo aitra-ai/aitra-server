@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/common/types"
-	"opencsg.com/csghub-server/notification/notifychannel"
-	"opencsg.com/csghub-server/notification/scenariomgr"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/types"
+	"github.com/aitra-ai/aitra-server/notification/notifychannel"
+	"github.com/aitra-ai/aitra-server/notification/scenariomgr"
 )
 
 // implement scenariomgr.GetDataFunc to get site internal message data

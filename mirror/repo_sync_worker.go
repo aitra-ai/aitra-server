@@ -3,9 +3,9 @@ package mirror
 import (
 	"context"
 
-	"opencsg.com/csghub-server/builder/store/database"
-	"opencsg.com/csghub-server/common/config"
-	"opencsg.com/csghub-server/mirror/reposyncer"
+	"github.com/aitra-ai/aitra-server/builder/store/database"
+	"github.com/aitra-ai/aitra-server/common/config"
+	"github.com/aitra-ai/aitra-server/mirror/reposyncer"
 )
 
 type RepoSyncWorker interface {

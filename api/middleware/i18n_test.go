@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"opencsg.com/csghub-server/api/httpbase"
-	"opencsg.com/csghub-server/common/errorx"
-	"opencsg.com/csghub-server/common/i18n"
+	"github.com/aitra-ai/aitra-server/api/httpbase"
+	"github.com/aitra-ai/aitra-server/common/errorx"
+	"github.com/aitra-ai/aitra-server/common/i18n"
 )
 
 func TestLocalizedErrorMiddleware(t *testing.T) {

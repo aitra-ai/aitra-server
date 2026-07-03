@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"opencsg.com/csghub-server/common/config"
+	"github.com/aitra-ai/aitra-server/common/config"
 )
 
 // buildProviderAuthHead constructs the auth header JSON for an external model call.
