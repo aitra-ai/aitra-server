@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -91,6 +92,21 @@ func newOpenAIHandler(
 // handleInsufficientBalance handles the insufficient balance error response
 // for both stream and non-stream requests
 func (h *OpenAIHandlerImpl) handleInsufficientBalance(c *gin.Context, isStream bool, username, modelID string, err error) {
+	// Handle budget exceeded (429) separately from insufficient balance (403)
+	if errors.Is(err, errorx.ErrBudgetExceeded) {
+		slog.WarnContext(c.Request.Context(), "monthly budget exceeded",
+			"user", username, "model", modelID)
+		c.Header("Retry-After", "3600")
+		c.JSON(http.StatusTooManyRequests, gin.H{
+			"error": map[string]string{
+				"type":    "budget_exceeded",
+				"message": "Monthly budget exceeded. Please increase your budget or wait until next month.",
+			},
+		})
+		c.Abort()
+		return
+	}
+
 	// Check if the error is the standard insufficient balance error
 	if !errors.Is(err, errorx.ErrInsufficientBalance) {
 		// If it's a different error, log and return generic error
@@ -222,6 +238,43 @@ var _ openai.ChatCompletionChunk
 // @Failure      404  {object}  error "Model not found"
 // @Failure      500  {object}  error "Internal server error"
 // @Router       /v1/chat/completions [post]
+// buildAnthropicBody converts OpenAI-format request to Anthropic Messages API format.
+// Extracts system messages from messages array into top-level "system" parameter.
+func buildAnthropicBody(chatReq *ChatCompletionRequest) []byte {
+	// Extract system messages
+	var systemParts []string
+	var nonSystemMessages []openai.ChatCompletionMessageParamUnion
+	for _, msg := range chatReq.Messages {
+		// Check if it's a system message by marshaling and inspecting
+		msgBytes, _ := json.Marshal(msg)
+		var raw map[string]any
+		json.Unmarshal(msgBytes, &raw)
+		if role, ok := raw["role"].(string); ok && role == "system" {
+			if content, ok := raw["content"].(string); ok {
+				systemParts = append(systemParts, content)
+			}
+		} else {
+			nonSystemMessages = append(nonSystemMessages, msg)
+		}
+	}
+
+	// Build Anthropic body with top-level system param
+	body := map[string]any{
+		"model":      chatReq.Model,
+		"messages":   nonSystemMessages,
+		"max_tokens": chatReq.MaxTokens,
+		"stream":     chatReq.Stream,
+	}
+	if len(systemParts) > 0 {
+		body["system"] = strings.Join(systemParts, "\n\n")
+	}
+	if chatReq.Temperature > 0 {
+		body["temperature"] = chatReq.Temperature
+	}
+	result, _ := json.Marshal(body)
+	return result
+}
+
 func (h *OpenAIHandlerImpl) Chat(c *gin.Context) {
 	/*
 		1.parse request body of ChatCompletionRequest
@@ -229,6 +282,7 @@ func (h *OpenAIHandlerImpl) Chat(c *gin.Context) {
 		3.find running model endpoint by model id
 		4.proxy request to running model endpoint
 	*/
+	requestStart := time.Now()
 	username := httpbase.GetCurrentUser(c)
 	userUUID := httpbase.GetCurrentUserUUID(c)
 	chatReq := &ChatCompletionRequest{}
@@ -237,6 +291,47 @@ func (h *OpenAIHandlerImpl) Chat(c *gin.Context) {
 		c.String(http.StatusBadRequest, fmt.Errorf("invalid chat compoletion request body:%w", err).Error())
 		return
 	}
+	// Skill injection: if skill parameter provided, inject system_prompt + tools
+	if chatReq.Skill != "" {
+		skillStore := database.NewAISkillStore()
+		// Try by name first, then by ID
+		var skill *database.AISkill
+		skill, _ = skillStore.FindByName(c.Request.Context(), chatReq.Skill)
+		if skill == nil {
+			if sid, err := strconv.ParseInt(chatReq.Skill, 10, 64); err == nil {
+				skill, _ = skillStore.FindByID(c.Request.Context(), sid)
+			}
+		}
+		if skill != nil && skill.Enabled {
+			// Inject system prompt as first message
+			if skill.SystemPrompt != "" {
+				sysMsg := openai.SystemMessage(skill.SystemPrompt)
+				chatReq.Messages = append([]openai.ChatCompletionMessageParamUnion{sysMsg}, chatReq.Messages...)
+			}
+			// Override model if skill has preferred model and request didn't specify
+			if skill.PreferredModel != "" && chatReq.Model == "" {
+				chatReq.Model = skill.PreferredModel
+			}
+			// Merge skill tools into request
+			if len(skill.Tools) > 0 {
+				toolsJSON, err := json.Marshal(skill.Tools)
+				if err == nil {
+					var tools []openai.ChatCompletionToolUnionParam
+					if json.Unmarshal(toolsJSON, &tools) == nil {
+						chatReq.Tools = append(chatReq.Tools, tools...)
+					}
+				}
+			}
+			// Increment usage count async
+			go func(id int64) {
+				ctx2, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+				defer cancel()
+				skillStore.IncrementUsageCount(ctx2, id)
+			}(skill.ID)
+			slog.Info("skill injected", "skill", skill.Name, "system_prompt_len", len(skill.SystemPrompt))
+		}
+	}
+
 	modelID := chatReq.Model
 	model, err := h.openaiComponent.GetModelByID(c.Request.Context(), username, modelID)
 	if err != nil {
@@ -300,6 +395,33 @@ func (h *OpenAIHandlerImpl) Chat(c *gin.Context) {
 		}
 	}
 
+	// Check API Key model permission
+	accessToken := httpbase.GetAccessToken(c)
+	if accessToken != "" {
+		tokenStore := database.NewAccessTokenStore()
+		if at, err := tokenStore.FindByToken(c.Request.Context(), accessToken, string(commonType.AccessTokenAppAIGateway)); err == nil && at != nil {
+			if len(at.AllowedModels) > 0 {
+				allowed := false
+				for _, m := range at.AllowedModels {
+					if m == modelName {
+						allowed = true
+						break
+					}
+				}
+				if !allowed {
+					c.JSON(http.StatusForbidden, gin.H{
+						"error": map[string]string{
+							"type":    "model_not_allowed",
+							"message": fmt.Sprintf("API key does not have access to model '%s'", modelName),
+						},
+					})
+					c.Abort()
+					return
+				}
+			}
+		}
+	}
+
 	sceneValue := c.Request.Header.Get(commonType.SceneHeaderKey)
 	// Check balance before processing request
 	if err := h.openaiComponent.CheckBalance(c.Request.Context(), username, model, sceneValue); err != nil {
@@ -312,12 +434,16 @@ func (h *OpenAIHandlerImpl) Chat(c *gin.Context) {
 		chatReq.MaxTokens = 4096
 	}
 
-	// marshal updated request map back to JSON bytes
-	updatedBodyBytes, _ := json.Marshal(chatReq)
+	// For Anthropic provider: extract system messages from messages array into top-level system param
+	var updatedBodyBytes []byte
+	if len(model.SvcName) == 0 && model.Provider == "anthropic" {
+		updatedBodyBytes = buildAnthropicBody(chatReq)
+	} else {
+		updatedBodyBytes, _ = json.Marshal(chatReq)
+	}
 	slog.Info("outgoing request body to upstream", slog.String("body", string(updatedBodyBytes)))
 	c.Request.Body = io.NopCloser(bytes.NewReader(updatedBodyBytes))
 	c.Request.ContentLength = int64(len(updatedBodyBytes))
-	rp, _ := proxy.NewReverseProxy(target)
 	slog.Info("proxy chat request to model target", slog.Any("target", target), slog.Any("host", host),
 		slog.Any("user", username), slog.Any("model_name", modelName))
 	// Create a combined key using userUUID and modelID for caching and tracking
@@ -351,42 +477,46 @@ func (h *OpenAIHandlerImpl) Chat(c *gin.Context) {
 
 	tokenCounter.AppendPrompts(chatReq.Messages)
 
-	proxyToApi := ""
-	if model.Endpoint != "" {
-		uri, err := url.ParseRequestURI(model.Endpoint)
-		if err != nil {
-			slog.Warn("endpoint has wrong struct ", slog.String("model", modelName))
-		} else {
-			// For both platform and external models, use the endpoint path as-is.
-			// External models store the full endpoint URL (e.g. https://api.anthropic.com/v1/messages),
-			// so uri.Path gives the correct target path.
-			proxyToApi = uri.Path
-		}
-	}
-
-	// Inject auth headers for external models.
-	// Priority: config-level provider API key > DB auth_header.
-	if len(model.SvcName) == 0 {
-		authJSON := buildProviderAuthHead(h.config, model.Provider, model.Endpoint, model.AuthHead)
-		slog.Info("external model auth",
-			slog.String("model", modelName),
-			slog.String("provider", model.Provider),
-			slog.Bool("authHead_set", model.AuthHead != ""),
-			slog.Bool("authJSON_set", authJSON != ""),
-		)
-		if authJSON != "" {
-			var authMap map[string]string
-			if err := json.Unmarshal([]byte(authJSON), &authMap); err != nil {
-				slog.Warn("invalid auth head", slog.String("model", modelName))
+	// External models with fallbacks: use fallback-aware proxy
+	if len(model.SvcName) == 0 && len(model.Fallbacks) > 0 {
+		actualProvider := proxyWithFallback(c, w, chatReq, model, h.config, 2)
+		c.Header("X-Provider", actualProvider)
+	} else {
+		// Original path: platform models or external without fallbacks
+		rp, _ := proxy.NewReverseProxy(target)
+		proxyToApi := ""
+		if model.Endpoint != "" {
+			uri, err := url.ParseRequestURI(model.Endpoint)
+			if err != nil {
+				slog.Warn("endpoint has wrong struct ", slog.String("model", modelName))
 			} else {
-				for authKey, authVal := range authMap {
-					c.Request.Header.Set(authKey, authVal)
+				proxyToApi = uri.Path
+			}
+		}
+
+		// Inject auth headers for external models.
+		if len(model.SvcName) == 0 {
+			authJSON := buildProviderAuthHead(h.config, model.Provider, model.Endpoint, model.AuthHead)
+			slog.Info("external model auth",
+				slog.String("model", modelName),
+				slog.String("provider", model.Provider),
+				slog.Bool("authHead_set", model.AuthHead != ""),
+				slog.Bool("authJSON_set", authJSON != ""),
+			)
+			if authJSON != "" {
+				var authMap map[string]string
+				if err := json.Unmarshal([]byte(authJSON), &authMap); err != nil {
+					slog.Warn("invalid auth head", slog.String("model", modelName))
+				} else {
+					for authKey, authVal := range authMap {
+						c.Request.Header.Set(authKey, authVal)
+					}
 				}
 			}
 		}
+		c.Header("X-Provider", model.Provider)
+		rp.ServeHTTP(w, c.Request, proxyToApi, host)
 	}
-
-	rp.ServeHTTP(w, c.Request, proxyToApi, host)
 
 	go func() {
 		usageCtx, cancel := context.WithTimeout(context.WithoutCancel(c.Request.Context()), 3*time.Second)
@@ -438,16 +568,25 @@ func (h *OpenAIHandlerImpl) Chat(c *gin.Context) {
 			costUSD = inputCost + outputCost
 		}
 
+		// Build request summary: model + message count
+		reqSummary := fmt.Sprintf("model=%s, messages=%d", modelName, len(chatReq.Messages))
+
+		latencyMs := time.Since(requestStart).Milliseconds()
+		statusCode := c.Writer.Status()
+
 		usageLogStore := database.NewModelUsageLogStore(h.config)
 		logErr := usageLogStore.Create(bctx, &database.ModelUsageLog{
-			UserID:       u.ID,
-			Username:     username,
-			ModelID:      modelName,
-			Provider:     model.Provider,
-			InputTokens:  inputTokens,
-			OutputTokens: outputTokens,
-			CostUSD:      costUSD,
-			CreatedAt:    time.Now(),
+			UserID:         u.ID,
+			Username:       username,
+			ModelID:        modelName,
+			Provider:       model.Provider,
+			InputTokens:    inputTokens,
+			OutputTokens:   outputTokens,
+			CostUSD:        costUSD,
+			StatusCode:     statusCode,
+			LatencyMs:      latencyMs,
+			RequestSummary: reqSummary,
+			CreatedAt:      time.Now(),
 		})
 		if logErr != nil {
 			slog.Error("billing: failed to create usage log", "error", logErr)

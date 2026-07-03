@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/spf13/cobra"
+	"opencsg.com/csghub-server/aigateway/healthcheck"
 	"opencsg.com/csghub-server/aigateway/router"
 	"opencsg.com/csghub-server/api/httpbase"
 	"opencsg.com/csghub-server/builder/event"
@@ -38,6 +39,10 @@ var cmdLaunch = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("fail to initialize message queue, %w", err)
 		}
+
+		// Start model health checker
+		healthcheck.NewHealthChecker(cfg)
+		slog.Info("model health checker started")
 
 		r, err := router.NewRouter(cfg)
 		if err != nil {

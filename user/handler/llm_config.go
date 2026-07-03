@@ -12,14 +12,16 @@ import (
 )
 
 type LLMConfigHandler struct {
-	store  database.LLMConfigStore
-	config *config.Config
+	store        database.LLMConfigStore
+	billingStore database.LLMBillingStore
+	config       *config.Config
 }
 
 func NewLLMConfigHandler(cfg *config.Config) (*LLMConfigHandler, error) {
 	return &LLMConfigHandler{
-		store:  database.NewLLMConfigStore(cfg),
-		config: cfg,
+		store:        database.NewLLMConfigStore(cfg),
+		billingStore: database.NewLLMBillingStore(cfg),
+		config:       cfg,
 	}, nil
 }
 
@@ -36,12 +38,21 @@ func (h *LLMConfigHandler) ListPublicLLMConfigs(c *gin.Context) {
 		return
 	}
 
+	// Load billing data for price info
+	billings, err := h.billingStore.List(c.Request.Context())
+	billingMap := make(map[string]database.LLMBilling)
+	if err == nil {
+		for _, b := range billings {
+			billingMap[b.ModelID] = b
+		}
+	}
+
 	public := make([]types.PublicLLMConfig, 0, len(configs))
 	for _, cfg := range configs {
 		if !cfg.Enabled {
 			continue
 		}
-		public = append(public, types.PublicLLMConfig{
+		item := types.PublicLLMConfig{
 			ID:          cfg.ID,
 			ModelName:   cfg.ModelName,
 			ApiEndpoint: cfg.ApiEndpoint,
@@ -49,7 +60,17 @@ func (h *LLMConfigHandler) ListPublicLLMConfigs(c *gin.Context) {
 			Enabled:     cfg.Enabled,
 			CreatedAt:   cfg.CreatedAt,
 			UpdatedAt:   cfg.UpdatedAt,
-		})
+		}
+		if cfg.LastCheckAt != nil {
+			t := cfg.LastCheckAt.Format("2006-01-02T15:04:05Z07:00")
+			item.LastCheckAt = &t
+		}
+		item.HealthStatus = cfg.HealthStatus
+		if b, ok := billingMap[cfg.ModelName]; ok {
+			item.PriceInput = &b.PriceInput
+			item.PriceOutput = &b.PriceOutput
+		}
+		public = append(public, item)
 	}
 	httpbase.OK(c, public)
 }
@@ -89,6 +110,7 @@ func (h *LLMConfigHandler) CreateExternalLLMConfig(c *gin.Context) {
 		Provider:    req.Provider,
 		Type:        database.LLMTypeAigatewayExternal,
 		Enabled:     req.Enabled,
+		Priority:    req.Priority,
 	}
 	created, err := h.store.Create(c.Request.Context(), cfg)
 	if err != nil {
@@ -152,6 +174,9 @@ func (h *LLMConfigHandler) UpdateExternalLLMConfig(c *gin.Context) {
 	}
 	if req.Provider != nil {
 		existing.Provider = *req.Provider
+	}
+	if req.Priority != nil {
+		existing.Priority = *req.Priority
 	}
 
 	updated, err := h.store.Update(c.Request.Context(), *existing)

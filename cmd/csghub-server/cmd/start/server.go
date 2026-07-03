@@ -18,7 +18,10 @@ import (
 	"opencsg.com/csghub-server/builder/store/database"
 	"opencsg.com/csghub-server/builder/store/database/migrations"
 	"opencsg.com/csghub-server/common/config"
+	commontypes "opencsg.com/csghub-server/common/types"
 	"opencsg.com/csghub-server/docs"
+	"opencsg.com/csghub-server/energy"
+	energyservice "opencsg.com/csghub-server/energy/service"
 )
 
 var enableSwagger bool
@@ -145,6 +148,22 @@ var serverCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		// aitra-meter: start the out-of-band energy aggregator. It runs in this
+		// (control-plane) process so its aitra_* metrics are scraped by the same
+		// /metrics endpoint; it never touches the inference path. Off unless a
+		// Prometheus address is configured.
+		slog.Info("start energy aggregator")
+		energyservice.Start(cmd.Context(), database.GetDB(), energyservice.Options{
+			PrometheusAddr:      cfg.Prometheus.ApiAddress,
+			PrometheusBasicAuth: cfg.Prometheus.BasicAuth,
+			RunningStatus:       int(common.Running),
+			InferenceTypes:      []int64{commontypes.InferenceType, commontypes.ServerlessType},
+			Site:                energy.SiteParams{PUE: 1.0, CarbonSource: "manual"}, // TODO: wire from SiteConfig
+			Window:              60 * time.Second,
+			StorageBackend:      cfg.Energy.StorageBackend,
+			StoragePath:         cfg.Energy.StoragePath,
+		})
 
 		slog.Info("start api server")
 		router.RunServer(cfg, enableSwagger)

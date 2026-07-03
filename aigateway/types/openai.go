@@ -36,12 +36,20 @@ type ExternalModelInfo struct {
 	AuthHead string `json:"-"` // the auth header to access the external model
 }
 
+// FallbackEndpoint stores an alternative provider endpoint for retry on failure.
+type FallbackEndpoint struct {
+	Provider string `json:"-"`
+	Endpoint string `json:"-"`
+	AuthHead string `json:"-"`
+}
+
 type Model struct {
 	BaseModel
-	InternalModelInfo        // internal model fields
-	ExternalModelInfo        // external model fields
-	Endpoint          string `json:"endpoint"`
-	InternalUse       bool   `json:"-"` // control whether the model is for internal use
+	InternalModelInfo                     // internal model fields
+	ExternalModelInfo                     // external model fields
+	Endpoint          string              `json:"endpoint"`
+	InternalUse       bool                `json:"-"`         // control whether the model is for internal use
+	Fallbacks         []FallbackEndpoint  `json:"-"`         // fallback endpoints for retry
 }
 
 func (m Model) MarshalJSON() ([]byte, error) {

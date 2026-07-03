@@ -4,6 +4,7 @@ package database
 
 import (
 	context "context"
+	"time"
 
 	mock "github.com/stretchr/testify/mock"
 	database "opencsg.com/csghub-server/builder/store/database"
@@ -503,4 +504,10 @@ func NewMockLLMConfigStore(t interface {
 	t.Cleanup(func() { mock.AssertExpectations(t) })
 
 	return mock
+}
+
+// UpdateHealthStatus provides a mock function with given fields: ctx, id, enabled, lastCheck
+func (_m *MockLLMConfigStore) UpdateHealthStatus(ctx context.Context, id int64, enabled bool, lastCheck time.Time) error {
+	ret := _m.Called(ctx, id, enabled, lastCheck)
+	return ret.Error(0)
 }

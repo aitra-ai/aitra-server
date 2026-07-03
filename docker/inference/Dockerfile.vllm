@@ -1,6 +1,7 @@
-FROM vllm/vllm-openai:v0.10.2
+FROM vllm/vllm-openai:latest
 RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
-RUN pip install --no-cache-dir csghub-sdk==0.4.8 ray supervisor
+RUN pip install --no-cache-dir csghub-sdk==0.4.8 ray supervisor && \
+    pip install --no-cache-dir --upgrade transformers
 RUN apt-get update && apt-get install -y supervisor
 RUN mkdir -p /var/log/supervisord
 COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf

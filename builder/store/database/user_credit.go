@@ -22,9 +22,9 @@ type UserCredit struct {
 type UserBalanceSummary struct {
 	UserID      int64   `bun:"user_id" json:"user_id"`
 	Username    string  `bun:"username" json:"username"`
-	TotalGrants float64 `bun:"total_grants" json:"total_grants"`
-	TotalSpent  float64 `bun:"total_spent" json:"total_spent"`
-	Balance     float64 `bun:"balance" json:"balance"`
+	TotalGrants float64 `bun:"total_grants" json:"total_granted_usd"`
+	TotalSpent  float64 `bun:"total_spent" json:"total_spent_usd"`
+	Balance     float64 `bun:"balance" json:"balance_usd"`
 }
 
 type UserCreditStore interface {

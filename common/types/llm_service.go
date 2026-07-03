@@ -39,6 +39,7 @@ type UpdateLLMConfigReq struct {
 	Type        *int    `json:"type"` // 1: optimization, 2: comparison, 4: summary readme
 	Enabled     *bool   `json:"enabled"`
 	Provider    *string `json:"provider"`
+	Priority    *int    `json:"priority"`
 }
 
 type UpdatePromptPrefixReq struct {
@@ -55,6 +56,7 @@ type CreateLLMConfigReq struct {
 	Type        int    `json:"type"` // 1: optimization, 2: comparison, 4: summary readme
 	Provider    string `json:"provider"`
 	Enabled     bool   `json:"enabled"`
+	Priority    int    `json:"priority"`
 }
 type CreatePromptPrefixReq struct {
 	ZH   string `json:"zh"`
@@ -71,4 +73,8 @@ type PublicLLMConfig struct {
 	Enabled     bool      `json:"enabled"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+	PriceInput   *float64  `json:"price_input,omitempty"`   // $/1M input tokens
+	PriceOutput  *float64  `json:"price_output,omitempty"`  // $/1M output tokens
+	LastCheckAt  *string   `json:"last_check_at,omitempty"` // ISO8601 timestamp
+	HealthStatus string    `json:"health_status,omitempty"` // "online" / "offline"
 }

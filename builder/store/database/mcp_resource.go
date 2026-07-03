@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 
 	"opencsg.com/csghub-server/common/errorx"
 	"opencsg.com/csghub-server/common/types"
@@ -24,6 +25,7 @@ type MCPResourceStore interface {
 	Create(ctx context.Context, input *MCPResource) (*MCPResource, error)
 	Update(ctx context.Context, input *MCPResource) (*MCPResource, error)
 	Delete(ctx context.Context, input *MCPResource) error
+	FindByID(ctx context.Context, id int64) (*MCPResource, error)
 	List(ctx context.Context, filter *types.MCPFilter) ([]MCPResource, int, error)
 }
 
@@ -57,6 +59,15 @@ func (m *mcpResourceStoreImpl) Update(ctx context.Context, input *MCPResource) (
 		return nil, errorx.HandleDBError(err, nil)
 	}
 	return input, nil
+}
+
+func (m *mcpResourceStoreImpl) FindByID(ctx context.Context, id int64) (*MCPResource, error) {
+	var r MCPResource
+	err := m.db.Operator.Core.NewSelect().Model(&r).Where("id = ?", id).Limit(1).Scan(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("find mcp resource by id: %w", err)
+	}
+	return &r, nil
 }
 
 func (m *mcpResourceStoreImpl) Delete(ctx context.Context, input *MCPResource) error {

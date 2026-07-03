@@ -104,8 +104,9 @@ type User struct {
 	VerifyStatus types.VerifyStatus `bun:",notnull,default:'none'" json:"verify_status"` // none, pending, approved, rejected
 	Labels       []string           `bun:",type:jsonb" json:"labels"`
 	DeletedAt    time.Time          `bun:",soft_delete,nullzero"`
-	RetainData   string             `bun:",nullzero" json:"retain_data"`
-	Tags         []UserTag          `bun:"rel:has-many,join:id=user_id" json:"tags"`
+	RetainData      string             `bun:",nullzero" json:"retain_data"`
+	MonthlyBudget   float64            `bun:"monthly_budget_usd,notnull,default:0" json:"monthly_budget_usd"` // 0 = unlimited
+	Tags            []UserTag          `bun:"rel:has-many,join:id=user_id" json:"tags"`
 
 	times
 }

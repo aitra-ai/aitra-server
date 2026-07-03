@@ -170,6 +170,8 @@ func (c *clusterComponentImpl) GetDeploys(ctx context.Context, req types.DeployR
 			scene = types.SceneSpace
 		case types.InferenceType:
 			scene = types.SceneModelInference
+		case types.ServerlessType:
+			scene = types.SceneModelInference
 		default:
 			slog.Debug("ignore invalid deploy type", slog.Any("scene", scene))
 			continue

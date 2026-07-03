@@ -196,6 +196,12 @@ func isValidAccessToken(c *gin.Context, userSvcClient rpc.UserSvcClient, token s
 			httpbase.SetAccessToken(c, token)
 			httpbase.SetAuthType(c, httpbase.AuthTypeAccessToken)
 			return true
+		} else if user.Application == types.AccessTokenAppAIGateway {
+			httpbase.SetCurrentUser(c, user.Username)
+			httpbase.SetCurrentUserUUID(c, user.UserUUID)
+			httpbase.SetAccessToken(c, token)
+			httpbase.SetAuthType(c, httpbase.AuthTypeAccessToken)
+			return true
 		} else if user.Application == types.AccessTokenAppMirror {
 			httpbase.SetCurrentUser(c, user.Username)
 			httpbase.SetCurrentUserUUID(c, user.UserUUID)

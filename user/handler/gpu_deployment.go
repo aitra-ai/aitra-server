@@ -9,24 +9,27 @@ import (
 	"opencsg.com/csghub-server/api/httpbase"
 	"opencsg.com/csghub-server/builder/store/database"
 	"opencsg.com/csghub-server/common/config"
+	"opencsg.com/csghub-server/common/types"
 )
 
 // GPUDeploymentHandler handles GPU SKU management and deployment billing APIs.
 type GPUDeploymentHandler struct {
-	skuStore    database.GPUSkuStore
-	deployStore database.DeploymentBillingStore
-	creditStore database.UserCreditStore
-	userStore   database.UserStore
-	config      *config.Config
+	skuStore         database.GPUSkuStore
+	deployStore      database.DeploymentBillingStore
+	deployTaskStore  database.DeployTaskStore
+	creditStore      database.UserCreditStore
+	userStore        database.UserStore
+	config           *config.Config
 }
 
 func NewGPUDeploymentHandler(cfg *config.Config) (*GPUDeploymentHandler, error) {
 	return &GPUDeploymentHandler{
-		skuStore:    database.NewGPUSkuStore(cfg),
-		deployStore: database.NewDeploymentBillingStore(),
-		creditStore: database.NewUserCreditStore(),
-		userStore:   database.NewUserStore(),
-		config:      cfg,
+		skuStore:        database.NewGPUSkuStore(cfg),
+		deployStore:     database.NewDeploymentBillingStore(),
+		deployTaskStore: database.NewDeployTaskStore(),
+		creditStore:     database.NewUserCreditStore(),
+		userStore:       database.NewUserStore(),
+		config:          cfg,
 	}, nil
 }
 
@@ -54,6 +57,7 @@ type DeploymentWithCost struct {
 	database.DeploymentBilling
 	RunningHours         float64 `json:"running_hours"`
 	EstimatedCurrentBill float64 `json:"estimated_current_bill"`
+	Source               string  `json:"source,omitempty"`
 }
 
 func enrichDeployment(d database.DeploymentBilling) DeploymentWithCost {
@@ -84,6 +88,7 @@ func (h *GPUDeploymentHandler) ListPublicGPUSkus(c *gin.Context) {
 }
 
 // ListMyDeployments returns the current user's deployments with running cost.
+// Merges deployment_billings (GPU billing) + deploys (serverless) into a unified list.
 // GET /api/v1/user/gpu/deployments
 func (h *GPUDeploymentHandler) ListMyDeployments(c *gin.Context) {
 	username := httpbase.GetCurrentUser(c)
@@ -96,16 +101,82 @@ func (h *GPUDeploymentHandler) ListMyDeployments(c *gin.Context) {
 		httpbase.ServerError(c, fmt.Errorf("failed to find user: %w", err))
 		return
 	}
-	deployments, err := h.deployStore.ListByUser(c.Request.Context(), u.ID)
+	ctx := c.Request.Context()
+
+	// 1. GPU billing deployments
+	deployments, err := h.deployStore.ListByUser(ctx, u.ID)
 	if err != nil {
 		httpbase.ServerError(c, fmt.Errorf("failed to list deployments: %w", err))
 		return
 	}
-	result := make([]DeploymentWithCost, 0, len(deployments))
+	result := make([]DeploymentWithCost, 0, len(deployments)+4)
 	for _, d := range deployments {
 		result = append(result, enrichDeployment(d))
 	}
+
+	// 2. Serverless deploys from deploys table (K8s runner)
+	serverlessDeploys, _, _ := h.deployTaskStore.ListDeployByUserID(ctx, u.ID, &types.DeployReq{
+		DeployType: types.ServerlessType,
+		PageOpts:   types.PageOpts{Page: 1, PageSize: 50},
+	})
+	for _, sd := range serverlessDeploys {
+		statusStr := serverlessStatusToString(sd.Status)
+		result = append(result, DeploymentWithCost{
+			DeploymentBilling: database.DeploymentBilling{
+				ID:         sd.ID,
+				UserID:     sd.UserID,
+				DeployName: sd.DeployName,
+				Status:     statusStr,
+				SkuName:    parseGPUFromHardware(sd.Hardware),
+				StartedAt:  sd.CreatedAt,
+				CreatedAt:  sd.CreatedAt,
+			},
+			Source: "serverless",
+		})
+	}
+
 	httpbase.OK(c, result)
+}
+
+func serverlessStatusToString(status int) string {
+	switch status {
+	case 20: // Running
+		return "running"
+	case 30: // Stopped
+		return "stopped"
+	case 50: // DeployFailed
+		return "failed"
+	default:
+		return "deploying"
+	}
+}
+
+func parseGPUFromHardware(hw string) string {
+	// hardware is JSON like {"gpu":{"type":"SXM4-80GB","num":"1",...},...}
+	if hw == "" {
+		return "N/A"
+	}
+	// Simple extraction — look for "type":"xxx"
+	idx := 0
+	for i := 0; i < len(hw)-6; i++ {
+		if hw[i:i+6] == "\"type\"" {
+			idx = i + 6
+			break
+		}
+	}
+	if idx == 0 {
+		return "GPU"
+	}
+	// Find the value after :"
+	start := 0
+	for i := idx; i < len(hw); i++ {
+		if hw[i] == '"' && start == 0 {
+			start = i + 1
+		} else if hw[i] == '"' && start > 0 {
+			return hw[start:i]
+		}
+	}
+	return "GPU"
 }
 
 // createDeploymentReq is the request body for CreateDeployment.
@@ -238,22 +309,30 @@ func (h *GPUDeploymentHandler) DeleteDeployment(c *gin.Context) {
 		return
 	}
 
-	d, err := h.deployStore.FindByID(c.Request.Context(), id)
-	if err != nil {
-		httpbase.ServerError(c, fmt.Errorf("deployment not found: %w", err))
-		return
-	}
-	if d.UserID != u.ID {
-		httpbase.ForbiddenError(c, fmt.Errorf("access denied"))
-		return
-	}
-	if d.Status != "stopped" {
-		httpbase.BadRequestWithExt(c, fmt.Errorf("can only delete stopped deployments"))
+	ctx := c.Request.Context()
+
+	// Try deployment_billings first
+	d, billingErr := h.deployStore.FindByID(ctx, id)
+	if billingErr == nil && d != nil {
+		if d.UserID != u.ID {
+			httpbase.ForbiddenError(c, fmt.Errorf("access denied"))
+			return
+		}
+		if d.Status != "stopped" {
+			httpbase.BadRequestWithExt(c, fmt.Errorf("can only delete stopped deployments"))
+			return
+		}
+		if err := h.deployStore.Delete(ctx, id); err != nil {
+			httpbase.ServerError(c, fmt.Errorf("failed to delete deployment: %w", err))
+			return
+		}
+		httpbase.OK(c, gin.H{"message": "deployment deleted"})
 		return
 	}
 
-	if err := h.deployStore.Delete(c.Request.Context(), id); err != nil {
-		httpbase.ServerError(c, fmt.Errorf("failed to delete deployment: %w", err))
+	// Fallback: try deploys table (serverless)
+	if err := h.deployTaskStore.DeleteDeployByID(ctx, u.ID, id); err != nil {
+		httpbase.ServerError(c, fmt.Errorf("deployment not found or access denied: %w", err))
 		return
 	}
 	httpbase.OK(c, gin.H{"message": "deployment deleted"})

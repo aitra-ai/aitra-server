@@ -400,14 +400,20 @@ type Config struct {
 	}
 
 	AIGateway struct {
-		Port                           int    `env:"OPENCSG_AIGATEWAY_PORT" default:"8094"`
-		ModerationBypassSensitiveCheck bool   `env:"OPENCSG_AIGATEWAY_MODERATION_BYPASS_SENSITIVE_CHECK" default:"false"`
+		Port                           int  `env:"OPENCSG_AIGATEWAY_PORT" default:"8094"`
+		ModerationBypassSensitiveCheck bool `env:"OPENCSG_AIGATEWAY_MODERATION_BYPASS_SENSITIVE_CHECK" default:"false"`
 		// Provider API keys — set once by admin, injected automatically for all external model calls.
 		// These take precedence over auth_header stored in the database.
 		AnthropicAPIKey  string `env:"OPENCSG_AIGATEWAY_ANTHROPIC_API_KEY" default:""`
 		OpenAIAPIKey     string `env:"OPENCSG_AIGATEWAY_OPENAI_API_KEY" default:""`
 		OpenRouterAPIKey string `env:"OPENCSG_AIGATEWAY_OPENROUTER_API_KEY" default:""`
 		DeepSeekAPIKey   string `env:"OPENCSG_AIGATEWAY_DEEPSEEK_API_KEY" default:""`
+		// Default rate limits for all users (0 = unlimited)
+		DefaultRPM int `env:"OPENCSG_AIGATEWAY_DEFAULT_RPM" default:"60"`
+		DefaultTPM int `env:"OPENCSG_AIGATEWAY_DEFAULT_TPM" default:"100000"`
+		// Response cache
+		CacheEnabled bool `env:"OPENCSG_AIGATEWAY_CACHE_ENABLED" default:"true"`
+		CacheTTL     int  `env:"OPENCSG_AIGATEWAY_CACHE_TTL" default:"3600"` // seconds, default 1 hour
 	}
 
 	Integration struct {
@@ -466,6 +472,14 @@ type Config struct {
 	Prometheus struct {
 		ApiAddress string `env:"STARHUB_SERVER_PROMETHEUS_API_ADDRESS" default:""`
 		BasicAuth  string `env:"STARHUB_SERVER_PROMETHEUS_BASIC_AUTH" default:""`
+	}
+
+	// Energy configures the aitra-meter energy aggregator (J/token measurement).
+	// The aggregator only runs when Prometheus.ApiAddress is set; these tune its
+	// persistence. StorageBackend empty keeps it metrics-only (no record store).
+	Energy struct {
+		StorageBackend string `env:"STARHUB_SERVER_ENERGY_STORAGE_BACKEND" default:""`                   // sqlite|memory|"" (none)
+		StoragePath    string `env:"STARHUB_SERVER_ENERGY_STORAGE_PATH" default:"/data/aitra/energy.db"` // sqlite file path
 	}
 
 	Feishu struct {

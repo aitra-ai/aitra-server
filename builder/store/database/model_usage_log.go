@@ -10,25 +10,29 @@ import (
 )
 
 type ModelUsageLog struct {
-	bun.BaseModel `bun:"table:model_usage_logs"`
-	ID            int64     `bun:",pk,autoincrement" json:"id"`
-	UserID        int64     `bun:",notnull" json:"user_id"`
-	Username      string    `bun:",notnull" json:"username"`
-	ModelID       string    `bun:",notnull" json:"model_id"`
-	Provider      string    `bun:",notnull" json:"provider"`
-	InputTokens   int       `bun:",notnull,default:0" json:"input_tokens"`
-	OutputTokens  int       `bun:",notnull,default:0" json:"output_tokens"`
-	CostUSD       float64   `bun:",notnull,default:0" json:"cost_usd"`
-	CreatedAt     time.Time `bun:",notnull,default:current_timestamp" json:"created_at"`
+	bun.BaseModel  `bun:"table:model_usage_logs"`
+	ID             int64     `bun:",pk,autoincrement" json:"id"`
+	UserID         int64     `bun:",notnull" json:"user_id"`
+	Username       string    `bun:",notnull" json:"username"`
+	ModelID        string    `bun:",notnull" json:"model_id"`
+	Provider       string    `bun:",notnull" json:"provider"`
+	InputTokens    int       `bun:",notnull,default:0" json:"input_tokens"`
+	OutputTokens   int       `bun:",notnull,default:0" json:"output_tokens"`
+	CostUSD        float64   `bun:",notnull,default:0" json:"cost_usd"`
+	StatusCode     int       `bun:",notnull,default:200" json:"status_code"`
+	LatencyMs      int64     `bun:",notnull,default:0" json:"latency_ms"`
+	RequestSummary string    `bun:",nullzero" json:"request_summary,omitempty"`
+	CreatedAt      time.Time `bun:",notnull,default:current_timestamp" json:"created_at"`
 }
 
 // UsageFilter holds optional filter parameters for usage queries.
 type UsageFilter struct {
-	Username  string
-	ModelID   string
-	Provider  string
-	StartDate *time.Time
-	EndDate   *time.Time
+	Username   string
+	ModelID    string
+	Provider   string
+	StatusCode *int
+	StartDate  *time.Time
+	EndDate    *time.Time
 }
 
 // UsageSummary is the aggregate summary for admin.
@@ -72,6 +76,8 @@ type ModelUsageLogStore interface {
 	TopModels(ctx context.Context, filter UsageFilter, limit int) ([]ModelUsageStat, error)
 	// Admin: overall summary
 	Summary(ctx context.Context, filter UsageFilter) (*UsageSummary, error)
+	// MonthlySpend returns total cost_usd for a user in the current month
+	MonthlySpend(ctx context.Context, userID int64) (float64, error)
 }
 
 type modelUsageLogStore struct {
@@ -91,6 +97,9 @@ func applyModelUsageFilter(q *bun.SelectQuery, f UsageFilter) *bun.SelectQuery {
 	}
 	if f.Provider != "" {
 		q = q.Where("provider = ?", f.Provider)
+	}
+	if f.StatusCode != nil {
+		q = q.Where("status_code = ?", *f.StatusCode)
 	}
 	if f.StartDate != nil {
 		q = q.Where("created_at >= ?", f.StartDate)
@@ -212,4 +221,19 @@ func (s *modelUsageLogStore) Summary(ctx context.Context, filter UsageFilter) (*
 		TotalOutput:   r.TotalOutput,
 		TotalCost:     r.TotalCost,
 	}, nil
+}
+
+func (s *modelUsageLogStore) MonthlySpend(ctx context.Context, userID int64) (float64, error) {
+	now := time.Now()
+	monthStart := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+	var spend float64
+	err := s.db.Operator.Core.NewSelect().
+		TableExpr("model_usage_logs").
+		ColumnExpr("COALESCE(SUM(cost_usd), 0)").
+		Where("user_id = ? AND created_at >= ?", userID, monthStart).
+		Scan(ctx, &spend)
+	if err != nil {
+		return 0, fmt.Errorf("monthly spend: %w", err)
+	}
+	return spend, nil
 }

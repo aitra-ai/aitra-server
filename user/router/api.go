@@ -183,6 +183,12 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error creating hf import handler:%w", err)
 	}
+
+	// Model weight handler
+	modelWeightHandler, err := handler.NewModelWeightHandler(config)
+	if err != nil {
+		return nil, fmt.Errorf("error creating model weight handler:%w", err)
+	}
 	{
 		adminGroup := apiV1Group.Group("/admin", mustLogin())
 		adminGroup.GET("/llm_configs", llmConfigHandler.ListExternalLLMConfigs)
@@ -210,13 +216,41 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 		adminGroup.PUT("/gpu/skus/:id", gpuDeployHandler.AdminUpdateGPUSku)
 		adminGroup.DELETE("/gpu/skus/:id", gpuDeployHandler.AdminDeleteGPUSku)
 		adminGroup.GET("/gpu/deployments", gpuDeployHandler.AdminListDeployments)
+
+		// Health check logs (admin only)
+		healthHandler := handler.NewHealthHandler()
+		adminGroup.GET("/health_logs", healthHandler.ListHealthLogs)
+
+		// MCP resource management (admin only)
+		mcpHandler := handler.NewMCPHandler()
+		adminGroup.GET("/mcp", mcpHandler.ListMCPResources)
+		adminGroup.POST("/mcp", mcpHandler.CreateMCPResource)
+		adminGroup.PUT("/mcp/:id", mcpHandler.UpdateMCPResource)
+		adminGroup.DELETE("/mcp/:id", mcpHandler.DeleteMCPResource)
+
+		// Rate limit management (admin only)
+		rateLimitHandler := handler.NewRateLimitHandler(config)
+		adminGroup.GET("/rate_limits", rateLimitHandler.ListRateLimits)
+		adminGroup.POST("/rate_limits", rateLimitHandler.UpsertRateLimit)
+		adminGroup.DELETE("/rate_limits/:id", rateLimitHandler.DeleteRateLimit)
+
+		// AI Skills management (admin only)
+		aiSkillHandler := handler.NewAISkillHandler()
+		adminGroup.GET("/skills", aiSkillHandler.AdminListSkills)
+		adminGroup.POST("/skills", aiSkillHandler.AdminCreateSkill)
+		adminGroup.PUT("/skills/:id", aiSkillHandler.AdminUpdateSkill)
+		adminGroup.DELETE("/skills/:id", aiSkillHandler.AdminDeleteSkill)
 	}
 
 	// User usage routes (require login)
+	rateLimitHandler := handler.NewRateLimitHandler(config)
 	{
 		userGroup.GET("/usage", mustLogin(), usageHandler.GetMyUsage)
 		userGroup.GET("/usage/summary", mustLogin(), usageHandler.GetMyUsageSummary)
+		userGroup.GET("/settings/budget", mustLogin(), usageHandler.GetMyBudget)
+		userGroup.PUT("/settings/budget", mustLogin(), usageHandler.SetMyBudget)
 		userGroup.GET("/balance", mustLogin(), usageHandler.GetMyBalance)
+		userGroup.GET("/rate_limit", mustLogin(), rateLimitHandler.GetMyRateLimit)
 
 		// GPU deployment routes (user)
 		userGroup.GET("/gpu/deployments", mustLogin(), gpuDeployHandler.ListMyDeployments)
@@ -227,6 +261,22 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 		// HuggingFace import (user)
 		userGroup.POST("/hf/import", mustLogin(), hfImportHandler.ImportHFModel)
 		userGroup.GET("/hf/model-info", hfImportHandler.GetHFModelInfo) // public: no auth needed
+
+		// Stripe recharge — AITRA-040 暂缓，路由未注册，stripe.go 保留备用
+		// TODO: 启用时取消注释
+		// if config.Payment.StripeSecretKey != "" {
+		// 	stripeHandler, stripeErr := handler.NewStripeHandler(config)
+		// 	if stripeErr == nil {
+		// 		userGroup.POST("/recharge/checkout", mustLogin(), stripeHandler.CreateCheckoutSession)
+		// 		apiV1Group.POST("/webhook/stripe", stripeHandler.HandleWebhook)
+		// 	}
+		// }
+
+		// Model weights management (user)
+		userGroup.GET("/model-weights", mustLogin(), modelWeightHandler.ListModelWeights)
+		userGroup.GET("/model-weights/:repo_id/status", mustLogin(), modelWeightHandler.GetWeightStatus)
+		userGroup.POST("/model-weights/:repo_id/sync", mustLogin(), modelWeightHandler.TriggerWeightSync)
+		userGroup.GET("/model-weights/:repo_id/files", mustLogin(), modelWeightHandler.ListWeightFiles)
 	}
 
 	// Public routes — no auth required
@@ -234,6 +284,9 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 		publicGroup := r.Group("/api/v1/public")
 		publicGroup.GET("/llm_configs", llmConfigHandler.ListPublicLLMConfigs)
 		publicGroup.GET("/gpu/skus", gpuDeployHandler.ListPublicGPUSkus)
+		publicGroup.GET("/model_stats", usageHandler.GetPublicModelStats)
+		aiSkillHandler := handler.NewAISkillHandler()
+		publicGroup.GET("/skills", aiSkillHandler.ListPublicSkills)
 
 		// Sandbox public endpoints (SpaceHub page, no login needed)
 		sandboxHandler := handler.NewSandboxHandler(config)

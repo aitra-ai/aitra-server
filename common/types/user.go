@@ -128,8 +128,9 @@ type CreateUserTokenRequest struct {
 	// default to csghub
 	Application AccessTokenApp `json:"application,omitempty"`
 	// default to empty, means full permission
-	Permission string    `json:"permission,omitempty"`
-	ExpiredAt  time.Time `json:"expired_at"`
+	Permission    string    `json:"permission,omitempty"`
+	AllowedModels []string  `json:"allowed_models,omitempty"` // empty = all models
+	ExpiredAt     time.Time `json:"expired_at"`
 }
 
 // CreateUserTokenRequest implements SensitiveRequestV2
@@ -259,10 +260,11 @@ type UserRepoReq struct {
 type AccessTokenApp string
 
 const (
-	AccessTokenAppGit      AccessTokenApp = "git"
-	AccessTokenAppCSGHub                  = AccessTokenAppGit
-	AccessTokenAppMirror   AccessTokenApp = "mirror"
-	AccessTokenAppStarship AccessTokenApp = "starship"
+	AccessTokenAppGit        AccessTokenApp = "git"
+	AccessTokenAppCSGHub                    = AccessTokenAppGit
+	AccessTokenAppMirror     AccessTokenApp = "mirror"
+	AccessTokenAppStarship   AccessTokenApp = "starship"
+	AccessTokenAppAIGateway  AccessTokenApp = "aigateway"
 )
 
 type UserRepoPermission struct {

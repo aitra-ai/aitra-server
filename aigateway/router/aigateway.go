@@ -32,10 +32,23 @@ func NewRouter(config *config.Config) (*gin.Engine, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error creating openai handler :%w", err)
 	}
+
+	// Rate limiter middleware for aigateway endpoints
+	rateLimiter, err := handler.NewRateLimiter(config)
+	if err != nil {
+		return nil, fmt.Errorf("error creating rate limiter: %w", err)
+	}
+
+	// Response cache for non-streaming chat completions
+	responseCache, err := handler.NewResponseCache(config)
+	if err != nil {
+		return nil, fmt.Errorf("error creating response cache: %w", err)
+	}
+
 	v1Group.GET("/models", middlewareCollection.Auth.NeedLogin, openAIhandler.ListModels)
 	v1Group.GET("/models/:model", middlewareCollection.Auth.NeedLogin, openAIhandler.GetModel)
-	v1Group.POST("/chat/completions", middlewareCollection.Auth.NeedLogin, openAIhandler.Chat)
-	v1Group.POST("/embeddings", middlewareCollection.Auth.NeedLogin, openAIhandler.Embedding)
+	v1Group.POST("/chat/completions", middlewareCollection.Auth.NeedLogin, rateLimiter.Middleware(), responseCache.Middleware(), openAIhandler.Chat)
+	v1Group.POST("/embeddings", middlewareCollection.Auth.NeedLogin, rateLimiter.Middleware(), openAIhandler.Embedding)
 
 	mcpProxy, err := handler.NewMCPProxyHandler(config)
 	if err != nil {

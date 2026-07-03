@@ -95,12 +95,13 @@ func (c *accessTokenComponentImpl) Create(ctx context.Context, req *types.Create
 	} else {
 		tokenValue := c.genUnique()
 		token = &database.AccessToken{
-			Name:        req.TokenName,
-			Token:       tokenValue,
-			UserID:      user.ID,
-			Application: req.Application,
-			Permission:  req.Permission,
-			IsActive:    true,
+			Name:          req.TokenName,
+			Token:         tokenValue,
+			UserID:        user.ID,
+			Application:   req.Application,
+			Permission:    req.Permission,
+			AllowedModels: req.AllowedModels,
+			IsActive:      true,
 		}
 	}
 

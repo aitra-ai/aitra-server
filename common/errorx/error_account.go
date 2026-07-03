@@ -7,6 +7,7 @@ const (
 	subscriptionExist
 	invalidUnitType
 	wrongTimeRange
+	budgetExceeded
 )
 
 var (
@@ -22,6 +23,8 @@ var (
 	//
 	// zh-HK: 帳戶餘額不足
 	ErrInsufficientBalance error = CustomError{prefix: errAccountPrefix, code: insufficientBalance}
+	// monthly budget exceeded
+	ErrBudgetExceeded error = CustomError{prefix: errAccountPrefix, code: budgetExceeded}
 	// user already has an active subscription
 	//
 	// Description: The user is attempting to subscribe to a service for which they already have an active subscription.

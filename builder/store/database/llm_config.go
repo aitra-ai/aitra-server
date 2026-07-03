@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/uptrace/bun"
 	"opencsg.com/csghub-server/common/config"
@@ -16,13 +17,16 @@ type lLMConfigStoreImpl struct {
 }
 
 type LLMConfig struct {
-	ID          int64  `bun:",pk,autoincrement" json:"id"`
-	ModelName   string `bun:",notnull" json:"model_name"`
-	ApiEndpoint string `bun:",notnull" json:"api_endpoint"`
-	AuthHeader  string `bun:",notnull" json:"auth_header"`
-	Type        int    `bun:",notnull" json:"type"` // 1: optimization, 2: comparison, 4: summary readme, 8: mcp scan, 16: for aigateway call external llm
-	Enabled     bool   `bun:",notnull" json:"enabled"`
-	Provider    string `bun:"," json:"provider"`
+	ID           int64      `bun:",pk,autoincrement" json:"id"`
+	ModelName    string     `bun:",notnull" json:"model_name"`
+	ApiEndpoint  string     `bun:",notnull" json:"api_endpoint"`
+	AuthHeader   string     `bun:",notnull" json:"auth_header"`
+	Type         int        `bun:",notnull" json:"type"` // 1: optimization, 2: comparison, 4: summary readme, 8: mcp scan, 16: for aigateway call external llm
+	Enabled      bool       `bun:",notnull" json:"enabled"`
+	Provider     string     `bun:"," json:"provider"`
+	Priority     int        `bun:",notnull,default:0" json:"priority"` // lower = higher priority, 0 = primary
+	LastCheckAt  *time.Time `bun:",nullzero" json:"last_check_at,omitempty"`
+	HealthStatus string     `bun:",nullzero,default:''" json:"health_status,omitempty"` // "online" / "offline" / ""
 	times
 }
 
@@ -45,6 +49,7 @@ type LLMConfigStore interface {
 	Update(ctx context.Context, config LLMConfig) (*LLMConfig, error)
 	Create(ctx context.Context, config LLMConfig) (*LLMConfig, error)
 	Delete(ctx context.Context, id int64) error
+	UpdateHealthStatus(ctx context.Context, id int64, enabled bool, lastCheck time.Time) error
 }
 
 func NewLLMConfigStore(cfg *config.Config) LLMConfigStore {
@@ -133,6 +138,23 @@ func (s *lLMConfigStoreImpl) Index(ctx context.Context, per, page int, search *t
 
 	return configs, total, nil
 }
+func (s *lLMConfigStoreImpl) UpdateHealthStatus(ctx context.Context, id int64, enabled bool, lastCheck time.Time) error {
+	status := "online"
+	if !enabled {
+		status = "offline"
+	}
+	_, err := s.db.Core.NewUpdate().Model((*LLMConfig)(nil)).
+		Set("last_check_at = ?", lastCheck).
+		Set("health_status = ?", status).
+		Set("enabled = ?", enabled).
+		Where("id = ?", id).
+		Exec(ctx)
+	if err != nil {
+		return fmt.Errorf("update health status for model %d: %w", id, err)
+	}
+	return nil
+}
+
 func (s *lLMConfigStoreImpl) GetByID(ctx context.Context, id int64) (*LLMConfig, error) {
 	var config LLMConfig
 	err := s.db.Operator.Core.NewSelect().Model(&config).Where("id = ?", id).Limit(1).Scan(ctx)

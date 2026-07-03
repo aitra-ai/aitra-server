@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -229,7 +230,18 @@ func (m *openaiComponentImpl) getExternalModels(c context.Context) []types.Model
 
 	per := 50
 	page := 1
-	var models []types.Model
+
+	// Collect all configs, then group by model_name
+	type configEntry struct {
+		modelName   string
+		provider    string
+		endpoint    string
+		authHeader  string
+		priority    int
+		enabled     bool
+	}
+	var allConfigs []configEntry
+
 	for {
 		extModels, _, err := m.extllmStore.Index(c, per, page, search)
 		if err != nil {
@@ -238,26 +250,60 @@ func (m *openaiComponentImpl) getExternalModels(c context.Context) []types.Model
 		}
 
 		for _, extModel := range extModels {
-			m := types.Model{
-				BaseModel: types.BaseModel{
-					Object:  "model",
-					ID:      extModel.ModelName,
-					OwnedBy: extModel.Provider,
-					Public:  true, // external models are always public
-				},
-				Endpoint: extModel.ApiEndpoint,
-				ExternalModelInfo: types.ExternalModelInfo{
-					Provider: extModel.Provider,
-					AuthHead: extModel.AuthHeader,
-				},
-			}
-			models = append(models, m)
+			allConfigs = append(allConfigs, configEntry{
+				modelName:  extModel.ModelName,
+				provider:   extModel.Provider,
+				endpoint:   extModel.ApiEndpoint,
+				authHeader: extModel.AuthHeader,
+				priority:   extModel.Priority,
+				enabled:    extModel.Enabled,
+			})
 		}
 		if len(extModels) < per {
 			break
 		} else {
 			page++
 		}
+	}
+
+	// Group by model_name: lowest priority = primary, rest = fallbacks
+	grouped := make(map[string][]configEntry)
+	for _, cfg := range allConfigs {
+		if !cfg.enabled {
+			continue
+		}
+		grouped[cfg.modelName] = append(grouped[cfg.modelName], cfg)
+	}
+
+	var models []types.Model
+	for modelName, configs := range grouped {
+		// Sort by priority (ascending)
+		sort.Slice(configs, func(i, j int) bool {
+			return configs[i].priority < configs[j].priority
+		})
+		primary := configs[0]
+		model := types.Model{
+			BaseModel: types.BaseModel{
+				Object:  "model",
+				ID:      modelName,
+				OwnedBy: primary.provider,
+				Public:  true,
+			},
+			Endpoint: primary.endpoint,
+			ExternalModelInfo: types.ExternalModelInfo{
+				Provider: primary.provider,
+				AuthHead: primary.authHeader,
+			},
+		}
+		// Add fallbacks
+		for _, fb := range configs[1:] {
+			model.Fallbacks = append(model.Fallbacks, types.FallbackEndpoint{
+				Provider: fb.provider,
+				Endpoint: fb.endpoint,
+				AuthHead: fb.authHeader,
+			})
+		}
+		models = append(models, model)
 	}
 	return models
 }

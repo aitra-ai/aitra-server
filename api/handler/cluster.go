@@ -123,7 +123,7 @@ func (h *ClusterHandler) GetDeploys(ctx *gin.Context) {
 		return
 	}
 	var req types.DeployReq
-	req.DeployTypes = []int{types.SpaceType, types.InferenceType, types.FinetuneType}
+	req.DeployTypes = []int{types.SpaceType, types.InferenceType, types.FinetuneType, types.ServerlessType}
 	req.Page = page
 	req.PageSize = per
 	status := ctx.Query("status")

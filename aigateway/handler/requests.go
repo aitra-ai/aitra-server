@@ -31,6 +31,7 @@ type ChatCompletionRequest struct {
 	MaxTokens     int                                   `json:"max_tokens,omitempty"`
 	Stream        bool                                  `json:"stream,omitempty"`
 	StreamOptions *StreamOptions                        `json:"stream_options,omitempty"`
+	Skill         string                                `json:"skill,omitempty"` // skill name or ID — auto-injects system_prompt + tools
 	// RawJSON stores all unknown fields during unmarshaling
 	RawJSON json.RawMessage `json:"-"`
 }

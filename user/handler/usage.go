@@ -34,6 +34,11 @@ func parseUsageFilter(c *gin.Context) database.UsageFilter {
 		ModelID:  c.Query("model_id"),
 		Provider: c.Query("provider"),
 	}
+	if sc := c.Query("status_code"); sc != "" {
+		if code, err := strconv.Atoi(sc); err == nil {
+			f.StatusCode = &code
+		}
+	}
 	if s := c.Query("start_date"); s != "" {
 		if t, err := time.Parse("2006-01-02", s); err == nil {
 			f.StartDate = &t
@@ -238,17 +243,33 @@ func (h *UsageHandler) UpdateBilling(c *gin.Context) {
 		httpbase.BadRequest(c, "invalid id: "+idStr)
 		return
 	}
-	var b database.LLMBilling
-	if err := c.ShouldBindJSON(&b); err != nil {
+	// Parse only price fields from request
+	var req struct {
+		PriceInput  *float64 `json:"price_input"`
+		PriceOutput *float64 `json:"price_output"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
 		httpbase.BadRequest(c, "invalid request body: "+err.Error())
 		return
 	}
-	b.ID = id
-	if err := h.billingStore.Update(c.Request.Context(), &b); err != nil {
+	// Fetch existing record first
+	existing, err := h.billingStore.FindByID(c.Request.Context(), id)
+	if err != nil {
+		httpbase.ServerError(c, fmt.Errorf("billing config not found: %w", err))
+		return
+	}
+	// Only update price fields
+	if req.PriceInput != nil {
+		existing.PriceInput = *req.PriceInput
+	}
+	if req.PriceOutput != nil {
+		existing.PriceOutput = *req.PriceOutput
+	}
+	if err := h.billingStore.Update(c.Request.Context(), existing); err != nil {
 		httpbase.ServerError(c, fmt.Errorf("failed to update billing: %w", err))
 		return
 	}
-	httpbase.OK(c, b)
+	httpbase.OK(c, existing)
 }
 
 // DeleteBilling deletes a billing pricing config (admin only).
@@ -349,4 +370,92 @@ func (h *UsageHandler) GrantCredit(c *gin.Context) {
 		return
 	}
 	httpbase.OK(c, gin.H{"message": fmt.Sprintf("Granted $%.2f to %s", body.AmountUSD, body.Username)})
+}
+
+// GetPublicModelStats returns platform-level per-model call counts (no auth required).
+// GET /api/v1/public/model_stats
+func (h *UsageHandler) GetPublicModelStats(c *gin.Context) {
+	stats, err := h.usageStore.TopModels(c.Request.Context(), database.UsageFilter{}, 100)
+	if err != nil {
+		httpbase.ServerError(c, fmt.Errorf("failed to get model stats: %w", err))
+		return
+	}
+	// Only expose model_id and total_requests (no cost/token details)
+	type PublicModelStat struct {
+		ModelID       string `json:"model_id"`
+		TotalRequests int64  `json:"total_requests"`
+	}
+	result := make([]PublicModelStat, 0, len(stats))
+	for _, s := range stats {
+		result = append(result, PublicModelStat{
+			ModelID:       s.ModelID,
+			TotalRequests: s.TotalReqs,
+		})
+	}
+	httpbase.OK(c, result)
+}
+
+// GetMyBudget returns the user's monthly budget and current spend.
+// GET /api/v1/user/budget
+func (h *UsageHandler) GetMyBudget(c *gin.Context) {
+	username := httpbase.GetCurrentUser(c)
+	if username == "" {
+		httpbase.UnauthorizedError(c, fmt.Errorf("not logged in"))
+		return
+	}
+	u, err := h.userStore.FindByUsername(c.Request.Context(), username)
+	if err != nil {
+		httpbase.ServerError(c, fmt.Errorf("failed to find user: %w", err))
+		return
+	}
+	spend, _ := h.usageStore.MonthlySpend(c.Request.Context(), u.ID)
+	httpbase.OK(c, gin.H{
+		"monthly_budget_usd": u.MonthlyBudget,
+		"current_spend_usd":  spend,
+		"percentage":         budgetPercentage(u.MonthlyBudget, spend),
+	})
+}
+
+// SetMyBudget sets the user's monthly budget.
+// PUT /api/v1/user/budget
+func (h *UsageHandler) SetMyBudget(c *gin.Context) {
+	username := httpbase.GetCurrentUser(c)
+	if username == "" {
+		httpbase.UnauthorizedError(c, fmt.Errorf("not logged in"))
+		return
+	}
+	var req struct {
+		MonthlyBudgetUSD float64 `json:"monthly_budget_usd"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		httpbase.BadRequest(c, "invalid request body")
+		return
+	}
+	if req.MonthlyBudgetUSD < 0 {
+		httpbase.BadRequest(c, "budget must be >= 0")
+		return
+	}
+	u, err := h.userStore.FindByUsername(c.Request.Context(), username)
+	if err != nil {
+		httpbase.ServerError(c, fmt.Errorf("failed to find user: %w", err))
+		return
+	}
+	u.MonthlyBudget = req.MonthlyBudgetUSD
+	err = h.userStore.Update(c.Request.Context(), &u, "")
+	if err != nil {
+		httpbase.ServerError(c, fmt.Errorf("failed to update budget: %w", err))
+		return
+	}
+	httpbase.OK(c, gin.H{"monthly_budget_usd": req.MonthlyBudgetUSD})
+}
+
+func budgetPercentage(budget, spend float64) float64 {
+	if budget <= 0 {
+		return 0
+	}
+	pct := (spend / budget) * 100
+	if pct > 100 {
+		return 100
+	}
+	return pct
 }

@@ -24,6 +24,7 @@ type LLMBillingStore interface {
 	List(ctx context.Context) ([]LLMBilling, error)
 	Create(ctx context.Context, b *LLMBilling) error
 	Update(ctx context.Context, b *LLMBilling) error
+	FindByID(ctx context.Context, id int64) (*LLMBilling, error)
 	Delete(ctx context.Context, id int64) error
 	FindByModel(ctx context.Context, provider, modelID string) (*LLMBilling, error)
 }
@@ -70,6 +71,17 @@ func (s *llmBillingStore) Delete(ctx context.Context, id int64) error {
 		return fmt.Errorf("delete llm billing: %w", err)
 	}
 	return nil
+}
+
+func (s *llmBillingStore) FindByID(ctx context.Context, id int64) (*LLMBilling, error) {
+	var b LLMBilling
+	err := s.db.Operator.Core.NewSelect().Model(&b).
+		Where("id = ?", id).
+		Limit(1).Scan(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("find llm billing by id: %w", err)
+	}
+	return &b, nil
 }
 
 func (s *llmBillingStore) FindByModel(ctx context.Context, provider, modelID string) (*LLMBilling, error) {

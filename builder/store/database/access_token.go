@@ -48,8 +48,9 @@ type AccessToken struct {
 	User   *User  `bun:"rel:belongs-to,join:user_id=id" json:"user"`
 	//example: csghub, starship
 	Application types.AccessTokenApp `bun:"column:app," json:"application"`
-	Permission  string               `bun:"," json:"permission"`
-	IsActive    bool                 `bun:",default:true" json:"is_active"`
+	Permission    string               `bun:"," json:"permission"`
+	AllowedModels []string             `bun:"allowed_models,type:jsonb,default:'[]'" json:"allowed_models"` // empty = all models allowed
+	IsActive      bool                 `bun:",default:true" json:"is_active"`
 	ExpiredAt   time.Time            `bun:",nullzero" json:"expired_at"`
 	DeletedAt   time.Time            `bun:",soft_delete,nullzero"`
 	times

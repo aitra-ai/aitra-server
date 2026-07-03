@@ -14,7 +14,9 @@ import (
 	common_types "opencsg.com/csghub-server/common/types"
 )
 
-type extendOpenai struct{}
+type extendOpenai struct {
+	chargingEnabled bool
+}
 
 func NewOpenAIComponentFromConfig(config *config.Config) (OpenAIComponent, error) {
 	cacheClient, err := cache.NewCache(context.Background(), cache.RedisConfig{
@@ -32,7 +34,7 @@ func NewOpenAIComponentFromConfig(config *config.Config) (OpenAIComponent, error
 		eventPub:       &event.DefaultEventPublisher,
 		extllmStore:    database.NewLLMConfigStore(config),
 		modelListCache: cacheClient,
-		extendOpenai:   extendOpenai{},
+		extendOpenai:   extendOpenai{chargingEnabled: config.Accounting.ChargingEnable},
 	}, nil
 }
 
@@ -47,14 +49,28 @@ func parseScene(sceneValue string) common_types.SceneType {
 }
 
 func (e *extendOpenai) CheckBalance(ctx context.Context, username string, model *types.Model, sceneValue string) error {
-	// Only check balance for external models (which cost real money)
-	if model.Provider == "" {
-		return nil // Platform models: no credit check
-	}
 	userStore := database.NewUserStore()
 	u, err := userStore.FindByUsername(ctx, username)
 	if err != nil {
 		return nil // Don't block on user lookup failure
+	}
+
+	// Check monthly budget (works regardless of charging_enable)
+	if u.MonthlyBudget > 0 {
+		usageStore := database.NewModelUsageLogStore(nil)
+		spend, err := usageStore.MonthlySpend(ctx, u.ID)
+		if err == nil && spend >= u.MonthlyBudget {
+			return errorx.ErrBudgetExceeded
+		}
+	}
+
+	// Skip credit balance check when charging is disabled
+	if !e.chargingEnabled {
+		return nil
+	}
+	// Only check balance for external models (which cost real money)
+	if model.Provider == "" {
+		return nil // Platform models: no credit check
 	}
 	creditStore := database.NewUserCreditStore()
 	balance, err := creditStore.Balance(ctx, u.ID)
