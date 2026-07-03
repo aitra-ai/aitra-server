@@ -1,75 +1,96 @@
-*[English](README_en.md) ∙ [简体中文](README_cn.md) ∙ [日本語](README_ja.md)*
+# aitra-server
 
-CSGHub Server是开源、可信的大模型资产管理平台[CSGHub](https://github.com/OpenCSGs/CSGHub/)的服务端部分开源项目，提供基于REST API的模型、数据集等大模型资产管理功能。
+*[English](README.md) ∙ 简体中文*
 
-## 主要功能：
-- 用户和组织的创建和管理 
-- 模型、数据集托管，支持以https或git协议的方式上传和下载模型、数据集文件
-- 模型、数据集标签的自动生成
-- 用户、组织、模型和数据的搜索
-- 数据集文件在线预览，目前支持`.parquet`格式文件
-- 文本、图像内容审核
-- 单个文件下载，包括LFS文件下载
-- 模型、数据集活跃度数据跟踪，如下载量、Like量等
+**aitra-server** 是 **Aitra** 企业级 AI 统一服务平台的后端——组织内所有 LLM 流量的统一控制平面：通过 OpenAI 兼容 API 一次接入，即可获得统一认证、用量计费、能耗计量，以及 Kubernetes 上的一键模型部署。
 
-## 功能演示
-为了帮助您更直观地了解 CSGHub 的功能和使用方法，我们录制了演示视频。您可以通过观看视频，快速了解本项目的主要特性和操作流程。
-- CSGHub功能演示如下，你也可以通过外部视频网站查看 [YouTube](https://www.youtube.com/watch?v=SFDISpqowXs) 或 [Bilibili](https://www.bilibili.com/video/BV1wk4y1X7G7/)
-<video width="658" height="432" src="https://github-production-user-asset-6210df.s3.amazonaws.com/3232817/296556812-205d07f2-de9d-4a7f-b3f5-83514a71453e.mp4"></video>
+## 为什么做 Aitra
 
-更完整的功能请移步[OpenCSG官网](https://portal.opencsg.com/models)，体验"模型"和"数据集"的强大管理功能。
+企业引入 LLM 时普遍会遇到四个问题：
 
-## 快速使用
-系统资源需求: 4c CPU/8GB内存
-请准备自行安装docker程序，本项目已在 Ubuntu22 环境下中完成测试。
+- **Shadow AI 失控** —— 各团队绕过 IT 直连 LLM API，支出、数据流向、安全风险无人追踪
+- **厂商锁定** —— 应用代码与单一 Provider 深度耦合，切换模型等于重写接入层
+- **成本与能耗黑盒** —— 无法把钱和电归因到模型、团队或请求
+- **GPU 利用率低** —— 粗放调度下集群利用率长期停留在 30–40%
 
-您可以通过docker-compose快速部署本地化的csghub-server服务：
-```shell
-# API token 长度至少为128个字符，发往 csghub-server 的 http 请求需要将 API token 作为 Bearer token 来做身份验证
-export STARHUB_SERVER_API_TOKEN=<API token>
-mkdir -m 777 gitea minio_data
-curl -L https://raw.githubusercontent.com/OpenCSGs/csghub-server/main/docker-compose.yml -o docker-compose.yml
-docker compose -f docker-compose.yml up -d
+Aitra 用一个 Kubernetes 原生平台同时解决这四个问题。
+
+## 功能
+
+| 能力 | 状态 | 说明 |
+|---|---|---|
+| OpenAI 兼容 AI 网关（`/v1/chat/completions`） | ✅ 已运行 | 多 Provider 分发、fallback、限流、响应缓存 |
+| 模型 / 数据集资产管理（Git-first，LFS） | ✅ 已运行 | 浏览、版本管理、在线预览 |
+| 用量计费与 chargeback | ✅ 已运行 | token 用量 + GPU 小时，按命名空间计费 |
+| 能耗计量（J/token） | ✅ 已运行 | 内嵌 [aitra-meter](https://github.com/aitra-ai/aitra-meter)，见 `energy/` |
+| 一键模型部署 | ✅ 已运行 | 声明式 DeployTask → Knative 服务，按 GPU SKU 调度，空闲缩容到零 |
+| 全链路审计 | ✅ 已运行 | append-only 审计日志、事件溯源账单 |
+| 按任务智能路由 | 🚧 设计中 | 根据任务自动路由至合适的模型，合规规则始终先行 |
+
+## 架构
+
+四层结构，全部 Kubernetes 原生：
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ 展示层         aitra-portal（Vue 3 + TypeScript）            │
+├──────────────────────────────────────────────────────────────┤
+│ 网关层         API Server :8080（REST / Git HTTP）           │
+│                AI Gateway :8094（OpenAI 兼容入口）           │
+├──────────────────────────────────────────────────────────────┤
+│ 业务服务层     User · Accounting · Builder · Runner          │
+│                Notification · Mirror · DataViewer · Cron     │
+├──────────────────────────────────────────────────────────────┤
+│ 基础设施层     Kubernetes + Knative · PostgreSQL · Redis     │
+│                NATS JetStream · MinIO/S3 · Gitea · Casdoor   │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-## 技术架构
-<div align=center>
-  <img src="docs/csghub_server-arch.png" alt="csghub-server architecture" width="800px">
-</div>
+核心目录：
 
-### 可扩展可定制
-- 支持不同的Git Server，如gitea，gitlab等
-- 支持灵活配置LFS存储系统，可选择使用本地或第三方兼容S3协议的任意云存储服务
-- 按需开启内容审核，选择任意第三方内容审核服务
+- `aigateway/` —— OpenAI 兼容推理网关（分发、fallback、限流、缓存、健康检查）
+- `energy/` —— J/token 能耗计量，基于 [aitra-meter](https://github.com/aitra-ai/aitra-meter) 核心
+- `accounting/` —— 用量计量、计费、配额
+- `builder/`、`component/`、`api/` —— 资产管理、镜像构建、REST API
+- `cmd/aitra-server/` —— 主程序（服务、迁移、worker）
 
-## 技术规划
-- [x] 支持更多Git Server: 目前内置了对gitea的支持，未来计划实现对主流Git仓库的支持
-- [x] 支持Git LFS: Git LFS支持超大文件， 支持git命令操作和Web UI在线下载
-- [x] 数据集在线预览: 数据集预览，支持LFS格式数据集的Top20/TopN加载预览
-- [x] 模型和数据集自动打标签:：支持自定义元数据和自动化提取模型/数据集标签
-- [x] S3协议兼容: 支持S3(MinIO)存储协议，更高的可靠性和存储性价比
-- [ ] 模型格式转换: 主流模型格式转化
-- [x] 模型一键部署: 支持与OpenCSG llm-inference集成， 一键启动模型推理
+## 相关仓库
 
-## License
-我们使用Apache 2.0协议，协议内容详见`LICENSE`文件。
+| 仓库 | 说明 |
+|---|---|
+| [aitra-portal](https://github.com/aitra-ai/aitra-portal) | Web 前端（Vue 3 + TypeScript + Vite） |
+| [aitra-meter](https://github.com/aitra-ai/aitra-meter) | 独立的 GPU/NPU 能耗计量引擎（J/token） |
 
-## 参与贡献
-如果你想参与贡献，请根据 [贡献指南](docs/zh-CN/contributing.md) 来进行贡献。我们非常期待你的贡献！
+## 快速开始
 
-## 致谢
-本项目基于Gin, DuckDB, minio, gitea等开源项目，在此深深感谢他们的开源贡献！
+前置要求：Go 1.25+，以及 PostgreSQL / Redis / NATS / MinIO / Gitea 依赖栈——仓库内的 `docker-compose.yml` 可一键拉起开发环境依赖。
 
-### 联系我们
-使用过程中的任何问题， 您可以通过以下任何一种方式联系我们：
-1. 在github 发起issue
-2. 扫描下方左侧微信二维码，添加微信小助手回复"开源"或者"open source"入群，加入我们的微信讨论群
-3. 加入我们的Discord频道: [OpenCSG Discord Channel](https://discord.gg/bXnu4C9BkR)
-4. 加入我们的Slack频道: [OpenCSG Slack Channel](https://join.slack.com/t/opencsghq/shared_invite/zt-2fmtem7hs-s_RmMeoOIoF1qzslql2q~A)
-<div style="display:inline-block">
-<img src="https://github.com/OpenCSGs/csghub/blob/main/docs/images/wechat-assistant-new.png" width='200'>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="https://github.com/OpenCSGs/csghub/blob/main/docs/images/discord-qrcode.png" width='200'>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="https://github.com/OpenCSGs/csghub/blob/main/docs/images/slack-qrcode.png" width='200'>
-</div>
+```bash
+# 构建
+make build          # 产出 ./bin/aitra-server
+
+# 执行数据库迁移（配置文件 local.toml）
+make migrate
+
+# 启动 API Server
+./bin/aitra-server start server --config local.toml
+```
+
+AI 网关监听 `:8094`，直接使用 OpenAI API 格式：
+
+```bash
+curl http://localhost:8094/v1/chat/completions \
+  -H "Authorization: Bearer $AITRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "your-model", "messages": [{"role": "user", "content": "你好"}]}'
+```
+
+## 技术栈
+
+Go 1.25 + Gin · PostgreSQL + Bun ORM · Redis · NATS JetStream · Kubernetes + Knative · OpenTelemetry + Prometheus + Loki
+
+## 许可与致谢
+
+Apache License 2.0。
+
+资产管理部分的架构参考了 [OpenCSG CSGHub](https://github.com/OpenCSGs/csghub-server) 项目（Apache 2.0）。Aitra 专注于推理运营层：网关、路由、计费、能耗计量与部署编排。
