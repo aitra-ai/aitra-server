@@ -65,12 +65,14 @@ Aitra 用一个 Kubernetes 原生平台同时解决这四个问题。
 
 前置要求：Go 1.25+，以及 PostgreSQL / Redis / NATS / MinIO / Gitea 依赖栈——仓库内的 `docker-compose.yml` 可一键拉起开发环境依赖。
 
+完整部署教程（全部服务、Web 前端、Kubernetes GPU 模型部署、生产加固清单）见[部署指南](docs/zh-CN/deployment.md)。
+
 ```bash
 # 构建
 make build          # 产出 ./bin/aitra-server
 
 # 执行数据库迁移（配置文件 local.toml）
-make migrate
+make migrate_local
 
 # 启动 API Server
 ./bin/aitra-server start server --config local.toml

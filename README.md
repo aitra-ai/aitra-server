@@ -65,12 +65,14 @@ Key directories:
 
 Prerequisites: Go 1.25+, and a PostgreSQL / Redis / NATS / MinIO / Gitea stack — `docker-compose.yml` in this repo brings up the development dependencies.
 
+For a full walkthrough — all services, the web portal, GPU model deployment on Kubernetes, and a production checklist — see the [Deployment Guide](docs/en/deployment.md).
+
 ```bash
 # build
 make build          # outputs ./bin/aitra-server
 
 # run database migrations (config file: local.toml)
-make migrate
+make migrate_local
 
 # start the API server
 ./bin/aitra-server start server --config local.toml
